@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TddProjectApplication {
 
 	public static void main(String[] args) {
+		SpringApplication.run(TddProjectApplication.class, args);
 		System.out.println("Hello TDD Project");
 	}
 }
