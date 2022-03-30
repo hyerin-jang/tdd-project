@@ -1,13 +1,11 @@
 package tpp.tddproject.domain.entity.item;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Item {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long itemNo;
 
     private String itemComp;
