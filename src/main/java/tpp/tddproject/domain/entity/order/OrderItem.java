@@ -1,15 +1,22 @@
 package tpp.tddproject.domain.entity.order;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import tpp.tddproject.domain.entity.item.Item;
+
+import javax.persistence.*;
 
 @Entity
 public class OrderItem {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long orderItemNo;
+
+    @ManyToOne
+    @JoinColumn(name = "ITEM_NO")
+    private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "OREDER_ID")
+    private Order order;
 
     private int orderItemCount;
 

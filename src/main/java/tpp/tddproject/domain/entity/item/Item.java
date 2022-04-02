@@ -8,6 +8,10 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long itemNo;
 
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_NO")
+    private Category category;
+
     private String itemComp;
 
     private String itemName;
