@@ -56,20 +56,20 @@ public class User {
     // == 연관관계 맵핑 == /
     //1:1 ADDRESS
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="ADDRESS_ID")
+    @JoinColumn(name="ADDRESS_NO")
     private Address address;
     //다:1 ROLE
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ROLE_NO", nullable = false)
-    private Role Role;
+    private Role role;
     //1:1 ADMIN
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="ADMIN_NO")
     private Admin admin;
     //1:다 ORDER
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "user")
     private List<Order> OrderList = new ArrayList<>();
     //1:다 CART
-    @OneToMany(mappedBy = "User")
+    @OneToMany(mappedBy = "user")
     private List<Cart> cartList = new ArrayList<>();
 }

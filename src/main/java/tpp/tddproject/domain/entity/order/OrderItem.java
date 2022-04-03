@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class OrderItem {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "ORDER_ITEM_NO")
     private Long orderItemNo;
 
     @ManyToOne
@@ -15,7 +16,7 @@ public class OrderItem {
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "OREDER_ID")
+    @JoinColumn(name = "ORDER_NO")
     private Order order;
 
     private int orderItemCount;

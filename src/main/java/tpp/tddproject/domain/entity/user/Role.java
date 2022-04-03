@@ -36,6 +36,6 @@ public class Role {
 
     // == 연관관계 맵핑 == /
     //1:다 유저
-    @OneToMany(mappedBy="Role")
+    @OneToMany(mappedBy="role")
     private List<User> userList = new ArrayList<>();
 }

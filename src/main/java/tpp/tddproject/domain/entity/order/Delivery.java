@@ -55,6 +55,6 @@ public class Delivery {
 
     // == 연관관계 맵핑 == /
     // 1:1 주문
-    @OneToOne(mappedBy="Delivery", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy="delivery", fetch = FetchType.LAZY)
     private Order order;
 }

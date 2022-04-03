@@ -42,6 +42,6 @@ public class Admin {
 
     // == 연관관계 맵핑 == /
     //1:1 유저
-    @OneToOne(mappedBy="Admin", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy="admin", fetch = FetchType.LAZY)
     private User user;
 }
