@@ -45,6 +45,6 @@ public class Address {
 
     // == 연관관계 맵핑 == /
     //1:1 유저
-    @OneToOne(mappedBy="Address", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy="address", fetch = FetchType.LAZY)
     private User user;
 }
