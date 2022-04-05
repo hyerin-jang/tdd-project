@@ -8,7 +8,7 @@ public class Item {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long itemNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_NO")
     private Category category;
 

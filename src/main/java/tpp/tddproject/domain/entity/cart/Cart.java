@@ -11,11 +11,11 @@ public class Cart {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long cartNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_NO")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ITEM_NO")
     private Item item;
 

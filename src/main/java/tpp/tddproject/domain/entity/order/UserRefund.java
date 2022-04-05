@@ -8,7 +8,7 @@ public class UserRefund {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long refundNo;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORDER_ITEM_NO")
     private OrderItem orderItem;
 
