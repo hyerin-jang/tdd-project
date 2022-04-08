@@ -5,14 +5,20 @@ import javax.persistence.*;
 @Entity
 public class NuRefund {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long nuRefundNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nu_order_no")
     private NuOrder nuOrder;
 
-    @Column(nullable = false)
-    private char nuRefundYn;
+    @Column(length = 1, nullable = false)
+    private String nuRefundYn;
 
+    @PrePersist
+    public void prePersistYn() {
+        this.nuRefundYn = this.nuRefundYn == null
+                ? "N"
+                : this.nuRefundYn;
+    }
 }

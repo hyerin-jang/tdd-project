@@ -1,6 +1,9 @@
 package tpp.tddproject.domain.entity.item;
 
+import tpp.tddproject.domain.entity.nu.NuOrderItem;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Item {
@@ -25,5 +28,8 @@ public class Item {
     private int itemSale;
 
     private String itemStatus;
+
+    @OneToMany(mappedBy = "nu_order_item")
+    private List<NuOrderItem> nuOrderItems;
 
 }

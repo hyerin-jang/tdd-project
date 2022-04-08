@@ -5,10 +5,10 @@ import javax.persistence.*;
 @Entity
 public class NuDelivery {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long nuDeliveryNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nu_order_no")
     private NuOrder nuOrder;
 
