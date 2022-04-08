@@ -1,17 +1,16 @@
 package tpp.tddproject.domain.entity.nu;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class NuDelivery {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long nuDeliveryNo;
 
-    private Long nuOrderNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nu_order_no")
+    private NuOrder nuOrder;
 
     @Column(length = 20, nullable = false)
     private String nuDeliveryName;

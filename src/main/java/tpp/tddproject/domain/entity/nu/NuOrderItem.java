@@ -1,20 +1,22 @@
 package tpp.tddproject.domain.entity.nu;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import tpp.tddproject.domain.entity.item.Item;
+
+import javax.persistence.*;
 
 @Entity
 public class NuOrderItem {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long nuOrderItemNo;
 
-    @Column(nullable = false)
-    private Long productNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_no")
+    private Item item;
 
-    @Column(nullable = false)
-    private Long nuOrderNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "nu_order_no")
+    private NuOrder nuOrder;
 
     @Column(nullable = false)
     private int nuOrderItemCount;
@@ -22,10 +24,20 @@ public class NuOrderItem {
     @Column(nullable = false)
     private int nuOrderItemPrice;
 
-    @Column(nullable = false)
-    private char nuOrderItemStatus;
+    @Column(length = 1, nullable = false)
+    private String nuOrderItemStatus;
 
-    @Column(nullable = false)
-    private char nuOrderItemRefund;
+    @Column(length = 1, nullable = false)
+    private String nuOrderItemRefund;
 
+    @PrePersist
+    public void prePersistYn() {
+        this.nuOrderItemStatus = this.nuOrderItemStatus == null
+                ? "N"
+                : this.nuOrderItemStatus;
+
+        this.nuOrderItemRefund = this.nuOrderItemRefund == null
+                ? "N"
+                : this.nuOrderItemRefund;
+    }
 }
