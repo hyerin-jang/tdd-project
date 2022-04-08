@@ -11,9 +11,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf();
+        http.csrf().ignoringAntMatchers("/h2-console/**").disable();
         http.authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/").permitAll();
+        // frame, iframe, embed, object 태그 페이지 랜더링 허용 여부
+        // -> embedded h2 사용하기 위해 disable
+        http.headers()
+                .frameOptions().disable();
+
 
     }
 }

@@ -1,14 +1,16 @@
 package tpp.tddproject.domain.entity.item;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Item {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long itemNo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CATEGORY_NO")
+    private Category category;
 
     private String itemComp;
 
