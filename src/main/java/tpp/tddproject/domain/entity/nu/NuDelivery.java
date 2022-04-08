@@ -1,9 +1,6 @@
 package tpp.tddproject.domain.entity.nu;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class NuDelivery {
@@ -11,7 +8,9 @@ public class NuDelivery {
     @Id
     private Long nuDeliveryNo;
 
-    private Long nuOrderNo;
+    @ManyToOne
+    @JoinColumn(name = "nu_order_no")
+    private NuOrder nuOrder;
 
     @Column(length = 20, nullable = false)
     private String nuDeliveryName;
