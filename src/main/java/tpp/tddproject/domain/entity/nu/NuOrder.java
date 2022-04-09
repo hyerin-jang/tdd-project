@@ -13,13 +13,13 @@ public class NuOrder {
     @Column(nullable = false)
     private String nuOrderDate;
 
-    @OneToMany(mappedBy = "nu_delivery")
+    @OneToMany(mappedBy = "nuDeliveryNo")
     private List<NuDelivery> nuDeliveries;
 
-    @OneToMany(mappedBy = "nu_order_item")
+    @OneToMany(mappedBy = "nuOrderItemNo")
     private List<NuOrderItem> nuOrderItems;
 
-    @OneToMany(mappedBy = "nu_refund")
-    private List<NuRefund> nuRefunds = new ArrayList<>();
+    @OneToMany(mappedBy = "nuRefundNo")
+    private List<NuRefund> nuRefunds;
 
 }
