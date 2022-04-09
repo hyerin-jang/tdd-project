@@ -38,4 +38,5 @@ public class Role {
     //1:다 유저
     @OneToMany(mappedBy="role")
     private List<User> userList = new ArrayList<>();
+
 }
