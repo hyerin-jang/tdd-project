@@ -25,6 +25,7 @@ import java.util.List;
  * ----------------------------------------------------
  * 2022/04/01 11:11 오후  hyechan        최초 생성
  */
+@Table(name = "orders")
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)

@@ -9,7 +9,7 @@ public class NuDelivery {
     private Long nuDeliveryNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nu_order_no")
+    @JoinColumn(name = "nuOrderNo")
     private NuOrder nuOrder;
 
     @Column(length = 20, nullable = false)

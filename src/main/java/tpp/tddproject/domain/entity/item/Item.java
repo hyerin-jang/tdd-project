@@ -29,7 +29,7 @@ public class Item {
 
     private String itemStatus;
 
-    @OneToMany(mappedBy = "nu_order_item")
+    @OneToMany(mappedBy = "nuOrderItemNo")
     private List<NuOrderItem> nuOrderItems;
 
 }
