@@ -2,16 +2,21 @@ package tpp.tddproject.domain.entity.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import tpp.tddproject.domain.entity.nu.NuOrderItem;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
+@DynamicInsert
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
