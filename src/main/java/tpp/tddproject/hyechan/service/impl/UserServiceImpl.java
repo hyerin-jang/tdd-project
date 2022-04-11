@@ -1,18 +1,18 @@
 package tpp.tddproject.hyechan.service.impl;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import tpp.tddproject.domain.entity.user.QUser;
 import tpp.tddproject.domain.entity.user.User;
+import tpp.tddproject.hyechan.dto.UserDto;
 import tpp.tddproject.hyechan.repository.UserRepository;
 import tpp.tddproject.hyechan.service.UserService;
 import tpp.tddproject.vo.user.UserVO;
 
-import static tpp.tddproject.domain.entity.user.QUser.user;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * fileName    : UserServiceImpl
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void add(UserVO userVO) {
+    public Long add(UserVO userVO) {
 
         User user = User.builder()
                 .userId(userVO.getUserId())
@@ -44,7 +44,36 @@ public class UserServiceImpl implements UserService {
                 .userPw(bCryptPasswordEncoder.encode(userVO.getUserPw()))
                 .build();
         //Model Mapper 성능이슈로 하나하나 매핑
+        return userRepository.save(user).getUserNo();
+    }
 
-        userRepository.save(user);
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDto findById(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        return UserDto.builder().user(user).build();
+    }
+
+    @Override
+    public void update(Long userNo, UserVO userVO) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        user.update(userVO.getUserName(),userVO.getUserEmail(),userVO.getUserPhone());
+    }
+
+    @Override
+    public void delete(Long userNo) {
+        User user = userRepository.findById(userNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        user.delete();
     }
 }

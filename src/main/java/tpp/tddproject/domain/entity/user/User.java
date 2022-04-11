@@ -100,4 +100,14 @@ public class User {
         role.getUserList().add(this);
     }
 
+    public void update(String userName, String userEmail, String userPhone){
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+    }
+
+    public void delete(){
+        this.userYn = "N";
+    }
+
 }
