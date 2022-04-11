@@ -4,6 +4,8 @@ plugins {
 	//querydsl 추가
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
+	// Spring REST DOCS
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'tpp'
@@ -49,13 +51,40 @@ dependencies {
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-apt'
 
+	// Spring REST DOCS
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
+
+// == spring REST DOCS == //
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+test {
+	outputs.dir snippetsDir
+}
+asciidoctor.doFirst {	// asciidoctor가 실행될 때 docs 하위 파일 삭제
+	delete file('src/main/resources/static/docs')
+}
+asciidoctor {
+	dependsOn test
+	inputs.dir snippetsDir
+}
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+
+	from file("build/docs/asciidoc/")
+	into file("src/main/resources/static/docs")
+}
+build {
+	dependsOn copyDocument
+}
+// == spring REST DOCS 끝 == //
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-//querydsl 추가
+// == querydsl == //
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
 	library = "com.querydsl:querydsl-apt"
@@ -71,3 +100,4 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
+// == querydsl 끝 == //
