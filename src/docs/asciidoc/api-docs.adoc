@@ -1,0 +1,18 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= Spring REST Docs
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[USER]]
+== USER
+include::{snippets}/user/request-fields.adoc[]
+==== HTTP 테스트 요청
+include::{snippets}/user/http-request.adoc[]
+==== HTTP 테스트 응답
+include::{snippets}/user/http-response.adoc[]
