@@ -26,13 +26,13 @@ public class UserDto {
     private String userYn;
 
     @Builder
-    public UserDto(User user){
-        this.userNo = user.getUserNo();
-        this.userId = user.getUserId();
-        this.userName = user.getUserName();
-        this.userEmail = user.getUserEmail();
-        this.userPhone = user.getUserPhone();
-        this.userYn = user.getUserYn();
+    public UserDto(Long userNo, String userId, String userName, String userEmail, String userPhone, String userYn){
+        this.userNo = userNo;
+        this.userId = userId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+        this.userYn = userYn;
     }
 
 }

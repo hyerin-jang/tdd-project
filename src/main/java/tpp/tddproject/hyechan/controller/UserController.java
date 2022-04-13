@@ -3,17 +3,13 @@ package tpp.tddproject.hyechan.controller;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import tpp.tddproject.global.util.Util;
 import tpp.tddproject.hyechan.service.UserService;
 import tpp.tddproject.vo.user.UserVO;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import static tpp.tddproject.global.util.Util.*;
 
 /**
  * fileName    : UserController
@@ -23,7 +19,6 @@ import java.util.Map;
  * ====================================================
  * DATE              AUTHOR               NOTE
  * ----------------------------------------------------
- * 2022/04/09 3:38 오후  hyechan        최초 생성
  */
 @RequestMapping("/user")
 @RestController
@@ -33,25 +28,26 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation("회원가입 요청")
     @PostMapping
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> add(@RequestBody UserVO userVO){
-        return ResponseEntity.ok(getStringObjectMap(userService.add(userVO)));
+    public ResponseEntity<?> add(@RequestBody UserVO userVO){
+        return ResponseEntity.ok()
+                .body(getMap(userService.add(userVO)));
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getList(){
-        return ResponseEntity.ok(getStringObjectMap(userService.findAll()));
+    public ResponseEntity<?> getList(){
+        return ResponseEntity.ok()
+                .body(getMap(userService.findAll()));
     }
 
     @GetMapping("/{userNo}")
-    public ResponseEntity<Map<String, Object>> get(@PathVariable Long userNo){
-        return ResponseEntity.ok(getStringObjectMap(userService.findById(userNo)));
+    public ResponseEntity<?> get(@PathVariable Long userNo){
+        return ResponseEntity.ok()
+                .body(getMap(userService.findById(userNo)));
     }
 
     @PutMapping("/{userNo}")
-    public ResponseEntity<Void> update(@PathVariable Long userNo, UserVO userVO) {
+    public ResponseEntity<Void> update(@PathVariable Long userNo, @RequestBody UserVO userVO) {
         userService.update(userNo, userVO);
         return ResponseEntity.ok().build();
     }
@@ -62,11 +58,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-
-    private Map<String, Object> getStringObjectMap(Object obj) {
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("result", obj);
-        return responseMap;
-    }
-
 }
+
