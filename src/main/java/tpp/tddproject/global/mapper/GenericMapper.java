@@ -1,4 +1,4 @@
-package tpp.tddproject.mapper;
+package tpp.tddproject.global.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.MappingTarget;
