@@ -1,12 +1,14 @@
 package tpp.tddproject.hyechan.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tpp.tddproject.domain.entity.user.User;
 import tpp.tddproject.hyechan.dto.UserDto;
+import tpp.tddproject.hyechan.mapper.UserMapper;
 import tpp.tddproject.hyechan.repository.UserRepository;
 import tpp.tddproject.hyechan.service.UserService;
 import tpp.tddproject.vo.user.UserVO;
@@ -31,8 +33,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
-
+    // 수동 매핑
     @Override
     public Long add(UserVO userVO) {
 
@@ -43,16 +46,14 @@ public class UserServiceImpl implements UserService {
                 .userPhone(userVO.getUserPhone())
                 .userPw(bCryptPasswordEncoder.encode(userVO.getUserPw()))
                 .build();
-        //Model Mapper 성능이슈로 하나하나 매핑
         return userRepository.save(user).getUserNo();
     }
 
+    // MapStruct
     @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(UserDto::new)
-                .collect(Collectors.toList());
+        return mapper.toDtoList(userRepository.findAll());
     }
 
     @Override
@@ -60,20 +61,28 @@ public class UserServiceImpl implements UserService {
     public UserDto findById(Long userNo) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-        return UserDto.builder().user(user).build();
+        return UserDto.builder()
+                .userNo(user.getUserNo())
+                .userName(user.getUserName())
+                .userEmail(user.getUserEmail())
+                .userId(user.getUserId())
+                .userPhone(user.getUserPhone())
+                .userId(user.getUserId()).build();
     }
 
     @Override
     public void update(Long userNo, UserVO userVO) {
         User user = userRepository.findById(userNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-        user.update(userVO.getUserName(),userVO.getUserEmail(),userVO.getUserPhone());
+        user.update(
+                userVO.getUserName(),
+                userVO.getUserEmail(),
+                userVO.getUserPhone()
+        );
     }
 
     @Override
     public void delete(Long userNo) {
-        User user = userRepository.findById(userNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
-        user.delete();
+        userRepository.deleteById(userNo);
     }
 }
