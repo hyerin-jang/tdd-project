@@ -4,6 +4,8 @@ plugins {
 	//querydsl 추가
 	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
+	// Spring REST DOCS
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'tpp'
@@ -13,6 +15,49 @@ sourceCompatibility = '11'
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+		dependencies {
+			implementation 'org.springframework.boot:spring-boot-starter-batch'
+			implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+			implementation 'org.springframework.boot:spring-boot-starter-mail'
+			implementation 'org.springframework.boot:spring-boot-starter-security'
+			implementation 'org.springframework.boot:spring-boot-starter-web'
+			implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+			//lombok
+			compileOnly 'org.projectlombok:lombok'
+			annotationProcessor 'org.projectlombok:lombok'
+
+			//test에서 lombok 사용을 위한 설정
+			testCompileOnly 'org.projectlombok:lombok'
+			testAnnotationProcessor 'org.projectlombok:lombok'
+
+			//mapstruct
+			implementation 'org.mapstruct:mapstruct:1.4.1.Final'
+			implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+			annotationProcessor "org.mapstruct:mapstruct-processor:1.4.1.Final"
+			annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+			testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.4.1.Final"
+
+			testImplementation 'org.springframework.boot:spring-boot-starter-test'
+			testImplementation 'org.springframework.batch:spring-batch-test'
+			testImplementation 'org.springframework.security:spring-security-test'
+
+			runtimeOnly 'com.h2database:h2'
+
+			//p6psy — 개발 시 query 표기
+			implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
+
+			// swagger 3.0.0
+			implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+			//querydsl 추가
+			implementation 'com.querydsl:querydsl-jpa'
+			implementation 'com.querydsl:querydsl-apt'
+
+			// Spring REST DOCS
+			testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+		}
 	}
 }
 
@@ -20,42 +65,37 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-batch'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.batch:spring-batch-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-
-	//test에서 lombok사용을 위한 설정
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
-
-	//p6psy — 개발 시 query 표기
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1'
-
-	// swagger 3.0.0
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
-	//querydsl 추가
-	implementation 'com.querydsl:querydsl-jpa'
-	implementation 'com.querydsl:querydsl-apt'
-
+// == spring REST DOCS == //
+ext {
+	snippetsDir = file('build/generated-snippets')
 }
+test {
+	outputs.dir snippetsDir
+}
+asciidoctor.doFirst {	// asciidoctor가 실행될 때 docs 하위 파일 삭제
+	delete file('src/main/resources/static/docs')
+}
+asciidoctor {
+	dependsOn test
+	inputs.dir snippetsDir
+}
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+
+	from file("build/docs/asciidoc/")
+	into file("src/main/resources/static/docs")
+}
+build {
+	dependsOn copyDocument
+}
+// == spring REST DOCS 끝 == //
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-//querydsl 추가
+// == querydsl == //
 def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
 	library = "com.querydsl:querydsl-apt"
@@ -71,3 +111,4 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
+// == querydsl 끝 == //

@@ -1,6 +1,7 @@
 package tpp.tddproject.domain.entity.user;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -60,7 +61,9 @@ public class User {
     private Address address;
     //다:1 ROLE
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ROLE_NO", nullable = false)
+//    TODO : Roll 컬럼 추가 후 수정
+//    @JoinColumn(name="ROLE_NO", nullable = false)
+    @JoinColumn(name="ROLE_NO")
     private Role role;
     //1:1 ADMIN
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -72,4 +75,39 @@ public class User {
     //1:다 CART
     @OneToMany(mappedBy = "user")
     private List<Cart> cartList = new ArrayList<>();
+
+    @PrePersist
+    public void prePersistYn() {
+        this.userTerms =
+                this.userTerms == null ? "Y" : this.userTerms;
+        this.userYn =
+                this.userYn == null ? "Y" : this.userYn;
+    }
+
+    // == 빌더 생성 메서드 == //
+    @Builder
+    public User(String userId, String userPw, String userName, String userEmail, String userPhone){
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+    }
+
+    // == 연관관계 메서드 == //
+    public void setRole(Role role){
+        this.role = role;
+        role.getUserList().add(this);
+    }
+
+    public void update(String userName, String userEmail, String userPhone){
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
+    }
+
+    public void delete(){
+        this.userYn = "N";
+    }
+
 }
