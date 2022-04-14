@@ -7,7 +7,7 @@ import tpp.tddproject.repository.NuOrderRepository;
 
 @Service
 @RequiredArgsConstructor
-public class NuOrderServiceImpl {
+public class NuOrderService {
 
     private final NuOrderRepository nuOrderRepository;
 
