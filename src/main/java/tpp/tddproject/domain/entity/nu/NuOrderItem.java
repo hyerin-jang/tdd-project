@@ -1,10 +1,12 @@
 package tpp.tddproject.domain.entity.nu;
 
+import lombok.Getter;
 import tpp.tddproject.domain.entity.item.Item;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class NuOrderItem {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
