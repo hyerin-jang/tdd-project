@@ -3,6 +3,7 @@ package tpp.tddproject.rin.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tpp.tddproject.domain.entity.item.Item;
 import tpp.tddproject.rin.dto.ItemDto;
 import tpp.tddproject.rin.mapper.ItemMapper;
@@ -38,16 +39,19 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public void addItem(Item item) {
         itemRepository.save(item);
     }
 
     @Override
+    @Transactional
     public void updateItem(Item item) {
         itemRepository.save(item);
     }
 
     @Override
+    @Transactional
     public void deleteItem(Long itemNo) {
         itemRepository.deleteById(itemNo);
     }
