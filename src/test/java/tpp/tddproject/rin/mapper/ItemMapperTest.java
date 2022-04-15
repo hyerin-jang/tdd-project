@@ -1,4 +1,4 @@
-package tpp.tddproject.rin;
+package tpp.tddproject.rin.mapper;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
