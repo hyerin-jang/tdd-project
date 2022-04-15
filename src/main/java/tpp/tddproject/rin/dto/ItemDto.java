@@ -34,9 +34,10 @@ public class ItemDto {
     private List<NuOrderItem> noOrderItem = new ArrayList<>();
 
     @Builder
-    public ItemDto (String itemComp, String itemName, int itemPrice, int itemStock,
+    public ItemDto (Long itemNo, String itemComp, String itemName, int itemPrice, int itemStock,
                  String itemDesc, int itemSale, String itemStatus) {
 
+        this.itemNo = itemNo;
         this.itemComp = itemComp;
         this.itemName = itemName;
         this.itemPrice = itemPrice;

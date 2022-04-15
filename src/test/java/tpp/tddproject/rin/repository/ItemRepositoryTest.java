@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import tpp.tddproject.domain.entity.item.Item;
-import tpp.tddproject.rin.repository.ItemRepository;
 
 import java.util.List;
 

@@ -1,13 +1,11 @@
 package tpp.tddproject.rin.mapper;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tpp.tddproject.domain.entity.item.Item;
 import tpp.tddproject.rin.dto.ItemDto;
-import tpp.tddproject.rin.mapper.ItemMapper;
 
 import static org.assertj.core.api.Assertions.*;
 

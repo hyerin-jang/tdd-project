@@ -44,10 +44,10 @@ public class Item {
     private List<NuOrderItem> nuOrderItems = new ArrayList<>();
 
     @Builder
-    public Item (String itemComp, String itemName, int itemPrice, int itemStock,
+    public Item (Long itemNo, String itemComp, String itemName, int itemPrice, int itemStock,
                 String itemDesc, int itemSale, String itemStatus) {
 
-        this.itemComp = itemComp;
+        this.itemNo = itemNo;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemStock = itemStock;

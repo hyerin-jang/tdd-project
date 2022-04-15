@@ -30,7 +30,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findItemById(Long itemNo) {
+    public List<ItemDto> findItemByItemNo(Long itemNo) {
 
         List<Item> itemList = itemRepository.findByItemNo(itemNo);
         List<ItemDto> result = itemMapper.toDtoList(itemList);
@@ -40,13 +40,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void addItem(Item item) {
+    public void addItem(ItemDto itemDto) {
+        Item item = itemMapper.toEntity(itemDto);
         itemRepository.save(item);
     }
 
     @Override
     @Transactional
-    public void updateItem(Item item) {
+    public void updateItem(ItemDto itemDto) {
+        Item item = itemMapper.toEntity(itemDto);
         itemRepository.save(item);
     }
 

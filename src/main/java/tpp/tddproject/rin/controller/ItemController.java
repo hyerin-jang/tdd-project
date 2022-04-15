@@ -5,16 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tpp.tddproject.domain.entity.item.Item;
 import tpp.tddproject.rin.dto.ItemDto;
 import tpp.tddproject.rin.service.ItemService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/iem")
+@RequestMapping("/item")
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -35,10 +33,10 @@ public class ItemController {
     }
 
     @GetMapping("/{itemNo}")
-    public ResponseEntity<List<ItemDto>> findItemByItemNO(@PathVariable Long itemNo) {
+    public ResponseEntity<List<ItemDto>> findItemByItemNo(@PathVariable Long itemNo) {
 
         try {
-            List<ItemDto> response = itemService.findItemById(itemNo);
+            List<ItemDto> response = itemService.findItemByItemNo(itemNo);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -49,23 +47,23 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody Item item) {
+    public ResponseEntity<Void> addItem(@RequestBody ItemDto itemDto) {
         try {
-            itemService.addItem(item);
+            itemService.addItem(itemDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("ItemNo : " + item.getItemNo(), e);
+            log.error("ItemNo : " + itemDto.getItemNo(), e);
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{itemNo}")
-    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody Item item) {
+    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody ItemDto itemDto) {
         try {
-            itemService.updateItem(item);
+            itemService.updateItem(itemDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
 

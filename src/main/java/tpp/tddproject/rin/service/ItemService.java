@@ -1,6 +1,5 @@
 package tpp.tddproject.rin.service;
 
-import tpp.tddproject.domain.entity.item.Item;
 import tpp.tddproject.rin.dto.ItemDto;
 
 import java.util.List;
@@ -9,11 +8,11 @@ public interface ItemService {
 
     List<ItemDto> findAllItem();
 
-    List<ItemDto> findItemById(Long itemNo);
+    List<ItemDto> findItemByItemNo(Long itemNo);
 
-    void addItem(Item item);
+    void addItem(ItemDto itemDto);
 
-    void updateItem(Item item);
+    void updateItem(ItemDto itemDto);
 
     void deleteItem(Long itemNo);
 
