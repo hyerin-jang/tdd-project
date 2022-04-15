@@ -76,10 +76,11 @@ public class ItemControllerUT {
     public void findItemByIdTest() throws Exception {
         //given
         List<ItemDto> itemDtoList = this.itemDtoList;
+        Long itemNo = itemDtoList.get(0).getItemNo();
+
         given(itemService.findItemByItemNo(any())).willReturn(itemDtoList);
 
         //when & then
-        Long itemNo = itemDtoList.get(0).getItemNo();
         mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemNo))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -94,21 +95,10 @@ public class ItemControllerUT {
     @Test
     void addItemTest() throws Exception {
         //given
-        List<ItemDto> itemDtoList = this.itemDtoList;
         willDoNothing().given(itemService).addItem(any());
 
         //when & then
-        mockMvc.perform(post("/item")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(
-                                "{ \"itemNo\" : 1, " +
-                                        "\"itemComp\" : \"polo\", " +
-                                        "\"itemName\" : \"knit\", " +
-                                        "\"itemPrice\" : 30000, " +
-                                        "\"itemStock\" : 32}"
-                        ))
+        mockMvc.perform(post("/item"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -117,22 +107,12 @@ public class ItemControllerUT {
     public void updateItemTest() throws Exception {
         //given
         List<ItemDto> itemDtoList = this.itemDtoList;
+        Long itemNo = itemDtoList.get(0).getItemNo();
+
         willDoNothing().given(itemService).updateItem(any());
 
         //when & then
-        Long itemNo = itemDtoList.get(0).getItemNo();
-
-        mockMvc.perform(put("/item/" + itemNo)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(
-                                "{ \"itemNo\" : 1, " +
-                                    "\"itemComp\" : \"polo\", " +
-                                    "\"itemName\" : \"knit\", " +
-                                    "\"itemPrice\" : 30000, " +
-                                    "\"itemStock\" : 32}"
-                        ))
+        mockMvc.perform(put("/item/" + itemNo))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -141,11 +121,11 @@ public class ItemControllerUT {
     void testDeleteContent() throws Exception {
         //given
         List<ItemDto> itemDtoList = this.itemDtoList;
+        Long itemNo = itemDtoList.get(0).getItemNo();
+
         willDoNothing().given(itemService).deleteItem(any());
 
         //when & then
-        Long itemNo = itemDtoList.get(0).getItemNo();
-
         mockMvc.perform(delete("/item/" + itemNo))
                 .andExpect(status().isOk())
                 .andDo(print());
