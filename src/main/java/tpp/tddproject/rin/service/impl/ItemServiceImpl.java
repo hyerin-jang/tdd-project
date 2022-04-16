@@ -30,26 +30,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findItemByItemNo(Long itemNo) {
+    public ItemDto findItemByItemNo(Long itemNo) {
 
-        List<Item> itemList = itemRepository.findByItemNo(itemNo);
-        List<ItemDto> result = itemMapper.toDtoList(itemList);
+        Item itemList = itemRepository.findByItemNo(itemNo);
+        ItemDto result = itemMapper.toDto(itemList);
 
         return result;
     }
 
     @Override
     @Transactional
-    public void addItem(ItemDto itemDto) {
-        Item item = itemMapper.toEntity(itemDto);
-        itemRepository.save(item);
+    public void addItem(List<ItemDto> itemDto) {
+        List<Item> itemList = itemMapper.toEntityList(itemDto);
+        for (Item item : itemList) {
+            itemRepository.save(item);
+        }
     }
 
     @Override
     @Transactional
-    public void updateItem(ItemDto itemDto) {
-        Item item = itemMapper.toEntity(itemDto);
-        itemRepository.save(item);
+    public void updateItem(List<ItemDto> itemDto) {
+        List<Item> itemList = itemMapper.toEntityList(itemDto);
+        for (Item item : itemList) {
+            itemRepository.save(item);
+        }
     }
 
     @Override

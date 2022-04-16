@@ -47,28 +47,28 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<Void> addItem(@RequestBody List<ItemDto> itemDto) {
         try {
             itemService.addItem(itemDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("ItemNo : " + itemDto.getItemNo(), e);
+            log.error("error: " + e);
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{itemNo}")
-    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody ItemDto itemDto) {
+    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody List<ItemDto> itemDto) {
         try {
             itemService.updateItem(itemDto);
 
             return new ResponseEntity<>(HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("ItemNo : " + itemNo, e);
+            log.error("error: " + e);
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -82,7 +82,7 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.OK);
 
         } catch (Exception e) {
-            log.error("ItemNo : " + itemNo, e);
+            log.error("error: " + e);
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -48,6 +48,7 @@ public class Item {
                 String itemDesc, int itemSale, String itemStatus) {
 
         this.itemNo = itemNo;
+        this.itemComp = itemComp;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemStock = itemStock;

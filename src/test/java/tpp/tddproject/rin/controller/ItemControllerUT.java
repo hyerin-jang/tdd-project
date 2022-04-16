@@ -1,5 +1,6 @@
 package tpp.tddproject.rin.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,7 +35,7 @@ public class ItemControllerUT {
     @MockBean
     private ItemService itemService;
 
-    List<ItemDto> itemDtoList;
+    ItemDto itemDto;
 
     @BeforeAll
     static void beforeAll() {
@@ -43,12 +44,12 @@ public class ItemControllerUT {
 
     @BeforeEach
     void beforeEach() {
-        itemDtoList = Arrays.asList(ItemDto.builder()
+        itemDto = ItemDto.builder()
                 .itemNo(1L)
                 .itemComp("nike")
                 .itemName("hoodie")
                 .itemPrice(10000)
-                .itemStock(24).build());
+                .itemStock(24).build();
 
         System.out.println("@BeforeEach");
     }
@@ -75,10 +76,10 @@ public class ItemControllerUT {
     @Test
     public void findItemByIdTest() throws Exception {
         //given
-        List<ItemDto> itemDtoList = this.itemDtoList;
-        Long itemNo = itemDtoList.get(0).getItemNo();
+        ItemDto itemDto = this.itemDto;
+        Long itemNo = itemDto.getItemNo();
 
-        given(itemService.findItemByItemNo(any())).willReturn(itemDtoList);
+        given(itemService.findItemByItemNo(any())).willReturn(itemDto);
 
         //when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemNo))
@@ -93,12 +94,16 @@ public class ItemControllerUT {
     }
 
     @Test
-    void addItemTest() throws Exception {
+    public void addItemTest() throws Exception {
         //given
         willDoNothing().given(itemService).addItem(any());
+        String content = new ObjectMapper().writeValueAsString(this.itemDto);
 
         //when & then
-        mockMvc.perform(post("/item"))
+        mockMvc.perform(post("/item")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -106,22 +111,26 @@ public class ItemControllerUT {
     @Test
     public void updateItemTest() throws Exception {
         //given
-        List<ItemDto> itemDtoList = this.itemDtoList;
-        Long itemNo = itemDtoList.get(0).getItemNo();
+        ItemDto itemDtoList = this.itemDto;
+        Long itemNo = itemDtoList.getItemNo();
+        String content = new ObjectMapper().writeValueAsString(this.itemDto);
 
         willDoNothing().given(itemService).updateItem(any());
 
         //when & then
-        mockMvc.perform(put("/item/" + itemNo))
+        mockMvc.perform(put("/item/" + itemNo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
-    void testDeleteContent() throws Exception {
+    public void deleteItemTest() throws Exception {
         //given
-        List<ItemDto> itemDtoList = this.itemDtoList;
-        Long itemNo = itemDtoList.get(0).getItemNo();
+        ItemDto itemDtoList = this.itemDto;
+        Long itemNo = itemDtoList.getItemNo();
 
         willDoNothing().given(itemService).deleteItem(any());
 
