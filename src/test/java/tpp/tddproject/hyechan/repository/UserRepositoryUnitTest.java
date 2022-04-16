@@ -11,9 +11,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import tpp.tddproject.domain.entity.user.User;
+import tpp.tddproject.hyechan.util.UserConstructor;
 import tpp.tddproject.vo.user.UserParam;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // 가짜 DB, Replace.NONE 실제 DB
 @DataJpaTest // jpa 관련 빈, SpringExtension 포함
-public class UserRepositoryUnitTest {
+public class UserRepositoryUnitTest extends UserConstructor {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,8 +33,8 @@ public class UserRepositoryUnitTest {
     @Test
     public void user_add_test() throws Exception{
         //given
-        UserParam userParam = createUserParam();
-        User userEntity = createUserEntity(userParam);
+        UserParam userParam = createParam();
+        User userEntity = createEntity(userParam);
         //when
         User save = userRepository.save(userEntity);
         //then
@@ -43,8 +43,8 @@ public class UserRepositoryUnitTest {
     @Test
     public void user_getList_test() throws Exception{
         //given
-        ArrayList<UserParam> userParam = createUserParam(3);
-        ArrayList<User> userEntity = createUserEntity(userParam);
+        ArrayList<UserParam> userParam = createParam(3);
+        ArrayList<User> userEntity = createEntity(userParam);
         List<User> users = userRepository.saveAll(userEntity);
         //when
         List<User> all = userRepository.findAll();
@@ -55,8 +55,8 @@ public class UserRepositoryUnitTest {
     @Test
     public void user_get_test() throws Exception{
         //given
-        UserParam userParam = createUserParam();
-        User userEntity = createUserEntity(userParam);
+        UserParam userParam = createParam();
+        User userEntity = createEntity(userParam);
         User user = userRepository.save(userEntity);
         //when
         boolean present = userRepository.findById(user.getUserNo()).isPresent();
@@ -67,8 +67,8 @@ public class UserRepositoryUnitTest {
     @Test
     public void user_update_test() throws Exception{
         //given
-        UserParam userParam = createUserParam();
-        User userEntity = createUserEntity(userParam);
+        UserParam userParam = createParam();
+        User userEntity = createEntity(userParam);
         User user = userRepository.save(userEntity);
         //when
         userRepository.updateUser(user.getUserNo(),new UserParam(null,null,"수정이름",null,null));
@@ -81,8 +81,8 @@ public class UserRepositoryUnitTest {
     @Test
     public void user_delete_test() throws Exception{
         //given
-        ArrayList<UserParam> userParam = createUserParam(3);
-        ArrayList<User> userEntity = createUserEntity(userParam);
+        ArrayList<UserParam> userParam = createParam(3);
+        ArrayList<User> userEntity = createEntity(userParam);
         List<User> users = userRepository.saveAll(userEntity);
         User user = users.get(0);
         //when
@@ -92,50 +92,5 @@ public class UserRepositoryUnitTest {
         assertThrows(NoSuchElementException.class,()->{
             userRepository.findById(user.getUserNo()).orElseThrow();
         });
-    }
-
-
-    private User createUserEntity(UserParam userParam){
-        return User.builder()
-                .userId(userParam.getUserId())
-                .userName(userParam.getUserName())
-                .userEmail(userParam.getUserEmail())
-                .userPhone(userParam.getUserPhone())
-                .userPw(userParam.getUserPw()).build();
-    }
-    private ArrayList<User> createUserEntity(ArrayList<UserParam> userParamList){
-        ArrayList<User> arrayList = new ArrayList<>();
-        for (UserParam userParam : userParamList) {
-            User user = User.builder()
-                    .userId(userParam.getUserId())
-                    .userName(userParam.getUserName())
-                    .userEmail(userParam.getUserEmail())
-                    .userPhone(userParam.getUserPhone())
-                    .userPw(userParam.getUserPw()).build();
-            arrayList.add(user);
-        }
-        return arrayList;
-    }
-    private UserParam createUserParam(){
-        UserParam userParam = new UserParam();
-        userParam.setUserId("test");
-        userParam.setUserName("햇찬");
-        userParam.setUserPw("test123");
-        userParam.setUserEmail("dhgpcks@gmail.com");
-        userParam.setUserPhone("010-1111-1111");
-        return userParam;
-    }
-    private ArrayList<UserParam> createUserParam(int count){
-        ArrayList<UserParam> arrayList = new ArrayList<>();
-        for(int i = 0; i < count; i ++){
-            UserParam userParam = new UserParam();
-            userParam.setUserId("test"+count);
-            userParam.setUserName("테스터"+count);
-            userParam.setUserPw("password"+count);
-            userParam.setUserEmail(count+"@gmail.com");
-            userParam.setUserPhone("010-0000-000"+count);
-            arrayList.add(userParam);
-        }
-        return arrayList;
     }
 }

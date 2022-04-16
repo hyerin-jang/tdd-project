@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tpp.tddproject.domain.entity.user.User;
+import tpp.tddproject.hyechan.controller.UserController;
 import tpp.tddproject.hyechan.dto.UserDto;
 import tpp.tddproject.hyechan.mapper.UserMapper;
 import tpp.tddproject.hyechan.service.UserService;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest // include MockMvc
+@WebMvcTest(UserController.class) // include MockMvc
 //단위테스트 WebMvcTest 테스트 하는 것만 메모리에 뜬다 = 통합 보다 가볍다
 //@ExtendWith(SpringExtension.class) // Spring 환경 테스트로 확장, JUNIT4: RunWith(SpringRunner.class)
 @Slf4j
