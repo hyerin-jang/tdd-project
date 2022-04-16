@@ -1,13 +1,11 @@
 package tpp.tddproject.hyechan.controller;
 
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tpp.tddproject.global.util.Util;
 import tpp.tddproject.hyechan.service.UserService;
-import tpp.tddproject.vo.user.UserVO;
+import tpp.tddproject.vo.user.UserParam;
 
 import static tpp.tddproject.global.util.Util.*;
 
@@ -29,9 +27,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody UserVO userVO){
+    public ResponseEntity<?> add(@RequestBody UserParam userParam){
         return ResponseEntity.ok()
-                .body(getMap(userService.add(userVO)));
+                .body(getMap(userService.add(userParam)));
     }
 
     @GetMapping
@@ -47,15 +45,15 @@ public class UserController {
     }
 
     @PutMapping("/{userNo}")
-    public ResponseEntity<Void> update(@PathVariable Long userNo, @RequestBody UserVO userVO) {
-        userService.update(userNo, userVO);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> update(@PathVariable Long userNo, @RequestBody UserParam userParam) {
+        return ResponseEntity.ok()
+                .body(getMap(userService.update(userNo, userParam)));
     }
 
     @DeleteMapping("/{userNo}")
-    public ResponseEntity<Void> delete(@PathVariable Long userNo){
+    public ResponseEntity<?> delete(@PathVariable Long userNo){
         userService.delete(userNo);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }

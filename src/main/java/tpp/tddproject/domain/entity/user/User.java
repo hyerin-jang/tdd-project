@@ -100,11 +100,17 @@ public class User {
         role.getUserList().add(this);
     }
 
-    public void update(String userName, String userEmail, String userPhone){
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.userPhone = userPhone;
-    }
+//    public void update(String userName, String userEmail, String userPhone){
+//        if(StringUtils.isNotEmpty(userName)){
+//            this.userName = userName;
+//        }
+//        if(StringUtils.isNotEmpty(userEmail)){
+//            this.userEmail = userEmail;
+//        }
+//        if(StringUtils.isNotEmpty(userPhone)){
+//            this.userPhone = userPhone;
+//        }
+//    } ==> querydsl
 
     public void delete(){
         this.userYn = "N";
