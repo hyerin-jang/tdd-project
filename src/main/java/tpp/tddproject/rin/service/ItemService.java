@@ -8,11 +8,11 @@ public interface ItemService {
 
     List<ItemDto> findAllItem();
 
-    ItemDto findItemByItemNo(Long itemNo);
+    ItemDto findItemByItemName(String itemName);
 
-    void addItem(List<ItemDto> itemDto);
+    void addItem(ItemDto itemDto);
 
-    void updateItem(List<ItemDto> itemDto);
+    void updateItem(ItemDto itemDto);
 
     void deleteItem(Long itemNo);
 

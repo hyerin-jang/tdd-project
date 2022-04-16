@@ -7,12 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tpp.tddproject.rin.dto.ItemDto;
 import tpp.tddproject.rin.service.ItemService;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -74,15 +72,18 @@ public class ItemControllerUT {
     }
 
     @Test
-    public void findItemByIdTest() throws Exception {
+    public void findItemByItemNameTest() throws Exception {
         //given
         ItemDto itemDto = this.itemDto;
         Long itemNo = itemDto.getItemNo();
 
-        given(itemService.findItemByItemNo(any())).willReturn(itemDto);
+        given(itemService.findItemByItemName(any())).willReturn(itemDto);
 
-        //when & then
-        mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemNo))
+        //when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemNo));
+
+        //then
+        resultActions
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$..itemNo").value(1))
@@ -99,11 +100,14 @@ public class ItemControllerUT {
         willDoNothing().given(itemService).addItem(any());
         String content = new ObjectMapper().writeValueAsString(this.itemDto);
 
-        //when & then
-        mockMvc.perform(post("/item")
+        //when
+        ResultActions resultActions = mockMvc.perform(post("/item")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        resultActions
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -117,11 +121,14 @@ public class ItemControllerUT {
 
         willDoNothing().given(itemService).updateItem(any());
 
-        //when & then
-        mockMvc.perform(put("/item/" + itemNo)
+        //when
+        ResultActions resultActions = mockMvc.perform(put("/item/" + itemNo)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        resultActions
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -134,8 +141,11 @@ public class ItemControllerUT {
 
         willDoNothing().given(itemService).deleteItem(any());
 
-        //when & then
-        mockMvc.perform(delete("/item/" + itemNo))
+        //when
+        ResultActions resultActions = mockMvc.perform(delete("/item/" + itemNo));
+
+        //then
+        resultActions
                 .andExpect(status().isOk())
                 .andDo(print());
     }

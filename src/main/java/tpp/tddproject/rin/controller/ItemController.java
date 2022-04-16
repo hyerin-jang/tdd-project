@@ -32,11 +32,11 @@ public class ItemController {
         }
     }
 
-    @GetMapping("/{itemNo}")
-    public ResponseEntity<List<ItemDto>> findItemByItemNo(@PathVariable Long itemNo) {
+    @GetMapping("/{itemName}")
+    public ResponseEntity<ItemDto> findItemByItemName(@PathVariable String itemName) {
 
         try {
-            List<ItemDto> response = itemService.findItemByItemNo(itemNo);
+            ItemDto response = itemService.findItemByItemName(itemName);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addItem(@RequestBody List<ItemDto> itemDto) {
+    public ResponseEntity<Void> addItem(@RequestBody ItemDto itemDto) {
         try {
             itemService.addItem(itemDto);
 
@@ -61,7 +61,7 @@ public class ItemController {
     }
 
     @PutMapping("/{itemNo}")
-    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody List<ItemDto> itemDto) {
+    public ResponseEntity<Void> updateItem(@PathVariable Long itemNo, @RequestBody ItemDto itemDto) {
         try {
             itemService.updateItem(itemDto);
 
