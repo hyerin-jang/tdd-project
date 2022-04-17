@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tpp.tddproject.domain.entity.user.User;
 
 /**
  * fileName    : UserParam
@@ -32,4 +33,14 @@ public class UserParam {
     private String userEmail;
 
     private String userPhone;
+
+    public User toEntity(){
+        return User.builder()
+                .userId(userId)
+                .userName(userName)
+                .userEmail(userEmail)
+                .userPhone(userPhone)
+                .userPw(userPw).build();
+    }
+
 }
