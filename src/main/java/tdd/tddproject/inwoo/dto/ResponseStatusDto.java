@@ -1,4 +1,4 @@
-package tpp.tddproject.inwoo.dto;
+package tdd.tddproject.inwoo.dto;
 
 import lombok.Getter;
 import lombok.Setter;

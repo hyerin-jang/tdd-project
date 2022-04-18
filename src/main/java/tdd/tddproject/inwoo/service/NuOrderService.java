@@ -1,10 +1,10 @@
-package tpp.tddproject.inwoo.service;
+package tdd.tddproject.inwoo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import tpp.tddproject.domain.entity.nu.NuOrder;
-import tpp.tddproject.inwoo.dto.ResponseDataDto;
-import tpp.tddproject.inwoo.repository.NuOrderRepository;
+import tdd.tddproject.domain.entity.nu.NuOrder;
+import tdd.tddproject.inwoo.repository.NuOrderRepository;
+import tdd.tddproject.inwoo.dto.ResponseDataDto;
 
 import java.util.List;
 import java.util.Optional;

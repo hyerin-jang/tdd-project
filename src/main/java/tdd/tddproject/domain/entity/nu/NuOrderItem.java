@@ -1,7 +1,7 @@
-package tpp.tddproject.domain.entity.nu;
+package tdd.tddproject.domain.entity.nu;
 
 import lombok.Getter;
-import tpp.tddproject.domain.entity.item.Item;
+import tdd.tddproject.domain.entity.item.Item;
 
 import javax.persistence.*;
 

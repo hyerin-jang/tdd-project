@@ -1,4 +1,4 @@
-package tpp.tddproject.vo.nu;
+package tdd.tddproject.vo.nu;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

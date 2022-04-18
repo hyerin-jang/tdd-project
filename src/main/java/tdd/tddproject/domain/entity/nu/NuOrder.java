@@ -1,13 +1,18 @@
 package tdd.tddproject.domain.entity.nu;
 
+import lombok.Builder;
 import lombok.Getter;
-import tpp.tddproject.vo.nu.NuOrderVo;
+import lombok.NoArgsConstructor;
+import tdd.tddproject.vo.nu.NuOrderVo;
+import tdd.tddproject.domain.entity.nu.NuOrderItem;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
 public class NuOrder {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
