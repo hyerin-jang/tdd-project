@@ -25,7 +25,7 @@ public class NuOrderController {
         nuOrderService.test();
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<NuOrder> getNuOrderList() {
         return nuOrderService.getNuOrderList();
     }

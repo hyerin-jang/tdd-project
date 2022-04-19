@@ -25,7 +25,9 @@ public class NuOrderControllerTest {
 
     @BeforeEach
     public void setUp() {
-        nuOrder = new NuOrder();
+        nuOrder = NuOrder.builder()
+                .build();
+
     }
 
     @Test

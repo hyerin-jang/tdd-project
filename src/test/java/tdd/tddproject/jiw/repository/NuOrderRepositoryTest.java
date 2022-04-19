@@ -14,6 +14,7 @@ import tdd.tddproject.inwoo.repository.NuOrderRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +23,8 @@ public class NuOrderRepositoryTest {
 
     @Autowired
     NuOrderRepository nuOrderRepository;
+
+    List<NuOrder> nuOrderList;
 
     @BeforeEach
     public void setUp() {
@@ -39,19 +42,27 @@ public class NuOrderRepositoryTest {
                 }})
                 .build();
 
-        nuOrderRepository.save(nuOrder);
+        nuOrderList = new ArrayList<>();
+
+        nuOrderList.forEach(order -> nuOrderRepository.save(nuOrder));
+
     }
 
     @Test
     void 리스트_조회_테스트() {
         List<NuOrder> all = nuOrderRepository.findAll();
 
-        assertEquals(all.size(), 1);
+        assertEquals(all.size(), nuOrderList.size());
     }
 
     @Test
     void 조회_테스트() {
+        Long nuOrderId = 1L;
 
+        NuOrder getNuOrder = nuOrderRepository.findById(nuOrderId)
+                .orElseThrow(NoSuchElementException::new);
+
+        assertEquals(getNuOrder.getNuOrderNo(), nuOrderId);
     }
 
     @Test
