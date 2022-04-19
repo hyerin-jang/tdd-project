@@ -7,7 +7,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @AllArgsConstructor
-public class NuOrderItem {
+public class NuOrderItemVo {
 
     private Long nuOrderItemNo;
 

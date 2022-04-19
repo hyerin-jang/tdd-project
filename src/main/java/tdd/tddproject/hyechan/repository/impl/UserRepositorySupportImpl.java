@@ -3,7 +3,6 @@ package tdd.tddproject.hyechan.repository.impl;
 import com.querydsl.core.dml.UpdateClause;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import io.micrometer.core.instrument.util.StringUtils;
-import javafx.beans.binding.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,7 +13,7 @@ import tdd.tddproject.vo.user.UserParam;
 
 import javax.persistence.EntityManager;
 
-import static tdd.tddproject.domain.entity.user.QUser.*;
+import static tdd.tddproject.domain.entity.user.QUser.user;
 
 /**
  * fileName    : UserRepositorySupportImpl

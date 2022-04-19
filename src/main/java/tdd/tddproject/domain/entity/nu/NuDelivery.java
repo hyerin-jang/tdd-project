@@ -1,8 +1,11 @@
 package tdd.tddproject.domain.entity.nu;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class NuDelivery {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
