@@ -72,16 +72,24 @@ public class NuOrderServiceTest {
                 .nuOrderDate(nuOrderDate)
                 .build();
 
-        doReturn(newNuOrder).when(nuOrderService).saveNuOrder(newNuOrder);
+        //이미 고립된 mock더미가 실행시키므로 굳이 필요한지..?
+        //없어도 상관없음
         doNothing().when(nuOrderService).saveNuOrder(newNuOrder);
-        //실제 메서드 반환 받는방법
-//        NuOrder getNuOrder = nuOrderService.saveNuOrder(newNuOrder);
-//        assertEquals();
+        nuOrderService.saveNuOrder(newNuOrder);
+
+        verify(nuOrderService, times(1)).saveNuOrder(newNuOrder);
     }
 
     @Test
     void 삭제() {
+        Long nuOrderId = 1L;
 
+        //이미 고립된 mock더미가 실행시키므로 굳이 필요한지..?
+        //없어도 상관없음
+        doNothing().when(nuOrderService).deleteNuOrder(nuOrderId);
+        nuOrderService.deleteNuOrder(nuOrderId);
+
+        verify(nuOrderService, times(1)).deleteNuOrder(nuOrderId);
     }
 
 }

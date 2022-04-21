@@ -35,8 +35,8 @@ public class NuOrderController {
         return nuOrderService.getNuOrder(nuOrderNo);
     }
 
-    @PostMapping("/{nuOrderNo}}")
-    public void saveNuOrder(@PathVariable Long nuOrderNo, @RequestBody NuOrder nuOrder) {
+    @PostMapping
+    public void saveNuOrder(@RequestBody NuOrder nuOrder) {
         nuOrderService.saveNuOrder(nuOrder);
     }
 
