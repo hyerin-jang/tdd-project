@@ -30,6 +30,7 @@ public class NuOrderControllerTest {
     public void setUp() {
         nuOrder = NuOrder.builder()
                 .build();
+
     }
 
     @Test
