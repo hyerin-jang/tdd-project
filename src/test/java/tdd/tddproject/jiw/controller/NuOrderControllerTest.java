@@ -1,6 +1,7 @@
 package tdd.tddproject.jiw.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -88,7 +88,14 @@ public class NuOrderControllerTest {
 
         ResultActions resultActions = mockMvc.perform(get(("/"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
+//                .accept(MediaType.APPLICATION_JSON_VALUE));
 
+        resultActions
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.result", Matchers.hasSize(2)))
+//                .andExpect(jsonPath("$.result[0].nuOrderNo").value("1"))
+//                .andExpect(jsonPath("$.result[1].nuOrderNo").value("2"))
+                .andDo(print());
 
     }
 
@@ -97,19 +104,48 @@ public class NuOrderControllerTest {
         NuOrder nuOrder = NuOrder.builder()
                 .nuOrderNo(1L)
                 .build();
-        //void
-//        when(nuOrderService.saveNuOrder(nuOrder))
-//                .thenReturn(nuOrder);
-        String nuOrderContent = new ObjectMapper().writeValueAsString(nuOrder);
 
+        String nuOrderContent = new ObjectMapper().writeValueAsString(nuOrder);
+        doNothing().when(nuOrderService).saveNuOrder(nuOrder);
         ResultActions resultActions = mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(nuOrderContent)
-                .accept(MediaType.APPLICATION_JSON_VALUE));
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .content(nuOrderContent));
 
         resultActions
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.result").value(1L))
+                .andDo(print());
+    }
+
+    @Test
+    void 비회원_수정() throws Exception {
+        Long nuOrderNo = 1L;
+        NuOrder nuOrder = NuOrder.builder()
+                .nuOrderNo(nuOrderNo)
+                .build();
+
+        String nuOrderContent = new ObjectMapper().writeValueAsString(nuOrder);
+        doNothing().when(nuOrderService).saveNuOrder(nuOrder);
+        ResultActions resultActions = mockMvc.perform(put("/{nuOrderNo}", nuOrderNo)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .content(nuOrderContent));
+
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    void 비회원_삭제() throws Exception {
+        Long nuOrderNo = 1L;
+
+        ResultActions resultActions = mockMvc.perform(delete("/{nuOrderNo}", nuOrderNo)
+                .accept(MediaType.APPLICATION_JSON_VALUE));
+//                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 
