@@ -71,6 +71,11 @@ public class NuOrderServiceTest {
                 .nuOrderDate(nuOrderDate)
                 .build();
 
+        //void 테스트를 한다는건
+        //예외 테스트를 하던가, 통합 테스트여서 값이 변경된걸로 검증하는게 아니라면
+        //사실상 호출여부로 검증할 수 밖에 없다.
+        //단위 테스트에서 mock객체로 고립시키면 변경이 이루어지지 않는데 그렇다면 반환도 없는 코드를 테스트 하려는 이유가..?
+
         //이미 고립된 mock더미가 실행시키므로 굳이 필요한지..?
         //없어도 상관없음
         doNothing().when(nuOrderService).saveNuOrder(newNuOrder);

@@ -1,11 +1,14 @@
 package tdd.tddproject.jiw.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -14,16 +17,26 @@ import tdd.tddproject.inwoo.controller.NuOrderController;
 import tdd.tddproject.inwoo.service.NuOrderService;
 import tdd.tddproject.inwoo.service.ResponseService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(NuOrderController.class)
 public class NuOrderControllerTest {
 
     @Autowired MockMvc mockMvc;
-    //TODO https://blusky10.tistory.com/330
 //    @MockBeans({@MockBean(NuOrderService.class), @MockBean(ResponseService.class)})
+//    @MockBeans(value = {@MockBean(NuOrderService.class), @MockBean(ResponseService.class)})
+    //Mock 객체 의존성 주입
+    @MockBean NuOrderService nuOrderService;
+    @MockBean ResponseService responseService;
+
     NuOrder nuOrder;
 
     @BeforeEach
@@ -43,9 +56,60 @@ public class NuOrderControllerTest {
     }
 
     @Test
-    void 비회원_주문() throws Exception {
-        mockMvc.perform(post("/order"))
+    void 비회원_조회() throws Exception {
+        Long nuOrderNo = 1L;
+        NuOrder nuOrder = NuOrder.builder()
+                .nuOrderNo(nuOrderNo)
+                .build();
+        when(nuOrderService.getNuOrder(nuOrderNo))
+                .thenReturn(java.util.Optional.ofNullable(nuOrder));
+
+        ResultActions resultActions = mockMvc.perform(get("/{nuOrderNo}", nuOrderNo)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
                 .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.result.nuOrderNo").value(nuOrderNo))
+                .andDo(print());
+    }
+
+    @Test
+    void 비회원_리스트_조회() throws Exception {
+        List<NuOrder> nuOrderList = new ArrayList<>() {{
+            add(NuOrder.builder()
+                    .nuOrderNo(1L)
+                    .build());
+            add(NuOrder.builder()
+                    .nuOrderNo(2L)
+                    .build());
+        }};
+        when(nuOrderService.getNuOrderList())
+                .thenReturn(nuOrderList);
+
+        ResultActions resultActions = mockMvc.perform(get(("/"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+
+    }
+
+    @Test
+    void 비회원_주문() throws Exception {
+        NuOrder nuOrder = NuOrder.builder()
+                .nuOrderNo(1L)
+                .build();
+        //void
+//        when(nuOrderService.saveNuOrder(nuOrder))
+//                .thenReturn(nuOrder);
+        String nuOrderContent = new ObjectMapper().writeValueAsString(nuOrder);
+
+        ResultActions resultActions = mockMvc.perform(post("/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(nuOrderContent)
+                .accept(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.result").value(1L))
                 .andDo(print());
     }
 
