@@ -1,5 +1,7 @@
 package tdd.tddproject.hyechan.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.ArrayList;
 
 /**
@@ -18,4 +20,6 @@ public interface ConstructorCreate<E, P> {
     ArrayList<E> createEntity(ArrayList<P> paramList);
     P createParam();
     ArrayList<P> createParam(int count);
+    String toJson(P param) throws JsonProcessingException;
+    P updateParam();
 }

@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tdd.tddproject.domain.entity.user.User;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
 /**
  * fileName    : UserParam
  * author      : hyechan
