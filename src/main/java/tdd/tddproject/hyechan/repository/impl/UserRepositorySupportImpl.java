@@ -52,6 +52,7 @@ public class UserRepositorySupportImpl implements UserRepositorySupport {
                 .where(user.userNo.eq(userNo))
                 .execute();
 
+        em.flush();
         em.clear();
     }
 

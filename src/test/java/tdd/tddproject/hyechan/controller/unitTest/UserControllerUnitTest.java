@@ -20,6 +20,7 @@ import tdd.tddproject.hyechan.controller.UserController;
 import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.service.UserService;
+import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //단위테스트 WebMvcTest 테스트 하는 것만 메모리에 뜬다 = 통합 보다 가볍다
 //@ExtendWith(SpringExtension.class) // Spring 환경 테스트로 확장, JUNIT4: RunWith(SpringRunner.class)
 @Slf4j
-public class UserControllerUnitTest {
+public class UserControllerUnitTest extends UserConstructor {
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,13 +54,11 @@ public class UserControllerUnitTest {
     public void user_add_test() throws Exception{
         // BOD Mockito pattern (extends BODMockito 라이브러리 사용가능)
         // == given(값)
-        UserParam user1 = new UserParam(
-                "test", "test123", "햇찬", "dhgpcks@gmail.com", "010-1111-1111"
-        );
-        String content = new ObjectMapper().writeValueAsString(user1); //Object->Json
+        UserParam param = createParam();
+        String content = toJson(param);
 
         //userService 가짜 객체이므로, 무엇을 반환할지 정해줘야 한다.
-        when(userService.add(user1)).thenReturn(0L);
+        when(userService.add(param)).thenReturn(0L);
         // == when(테스트 진행)
         ResultActions resultActions = mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,19 +77,8 @@ public class UserControllerUnitTest {
     public void user_getList_test() throws Exception{
         // mapStruct, modelMapper 를 쓸 경우 list 값은 어떻게 담는가? -> entityBuilder사용
         //given
-        User user1 = User.builder()
-                .userId("test1")
-                .userName("one")
-                .userEmail("dhgpcks@gmail.com")
-                .userPhone("010-1111-1111").build();
-
-        User user2 = User.builder()
-                .userId("test2")
-                .userName("two")
-                .userEmail("dhgpcks@naver.com")
-                .userPhone("010-2222-2222").build();
-
-        List<UserDto> userDtoList = mapper.toDtoList(new ArrayList<>(Arrays.asList(user1, user2)));
+        ArrayList<User> entity = createEntity(createParam(2));
+        List<UserDto> userDtoList = mapper.toDtoList(entity);
 
         when(userService.findAll()).thenReturn(userDtoList);
         //when
@@ -100,22 +88,19 @@ public class UserControllerUnitTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$.result.[0].userName").value( "one"))
-                .andExpect(jsonPath("$.result.[1].userName").value( "two"))
-                .andExpect(jsonPath("$.result.[0].userId").value("test1"))
-                .andExpect(jsonPath("$.result.[1].userPhone").value("010-2222-2222"))
+                .andExpect(jsonPath("$.result.[0].userName").value( "테스터0"))
+                .andExpect(jsonPath("$.result.[1].userName").value( "테스터1"))
+                .andExpect(jsonPath("$.result.[0].userId").value("test0"))
+                .andExpect(jsonPath("$.result.[1].userPhone").value("010-0000-0001"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void user_get_test() throws Exception{
         // given
+
         Long userNo = 1L;
-        User user = User.builder()
-                .userId("test")
-                .userName("one")
-                .userEmail("dhgpcks@gmail.com")
-                .userPhone("010-1111-1111").build();
+        User user = createEntity(createParam());
 
         when(userService.findById(userNo)).thenReturn(mapper.toDto(user));
         // when
@@ -135,13 +120,15 @@ public class UserControllerUnitTest {
         //given
         // 전 데이터
         Long userNo = 1L;
-        UserParam userParam = new UserParam("dhgpcks", "test123", "햇찬", "dhgpcks@gmail.com", "010-1111-1111");
+        UserParam userParam = createParam();
         // 업데이트 데이터
+        // VO, Param, UserRequestDTO(VO) - /// UserResponseDTO(응답DTO)
         UserParam updateUserParam = new UserParam();
         updateUserParam.setUserName("수정된 이름");
         updateUserParam.setUserPhone("010-3333-3333");
-        String content = new ObjectMapper().writeValueAsString(updateUserParam); //Object->Json
+        String content = toJson(updateUserParam);
 
+        // Entity.builder()
         User user = User.builder()
                 .userId(userParam.getUserId())
                 .userName(updateUserParam.getUserName())
@@ -158,7 +145,7 @@ public class UserControllerUnitTest {
         //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.userId").value("dhgpcks"))
+                .andExpect(jsonPath("$.result.userId").value("test"))
                 .andExpect(jsonPath("$.result.userName").value("수정된 이름"))
                 .andExpect(jsonPath("$.result.userEmail").value("dhgpcks@gmail.com"))
                 .andExpect(jsonPath("$.result.userPhone").value("010-3333-3333"))

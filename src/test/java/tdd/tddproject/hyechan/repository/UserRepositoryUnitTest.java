@@ -66,7 +66,7 @@ public class UserRepositoryUnitTest extends UserConstructor {
     public void user_update_test() throws Exception{
         //given
         UserParam userParam = createParam();
-        User userEntity = createEntity(userParam);
+        User userEntity = createEntity(createParam());
         User user = userRepository.save(userEntity);
         //when
         userRepository.updateUser(user.getUserNo(),new UserParam(null,null,"수정이름",null,null));

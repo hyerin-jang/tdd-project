@@ -1,5 +1,7 @@
 package tdd.tddproject.hyechan.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mapstruct.factory.Mappers;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.hyechan.mapper.UserMapper;
@@ -52,13 +54,27 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         ArrayList<UserParam> arrayList = new ArrayList<>();
         for(int i = 0; i < count; i ++){
             UserParam userParam = new UserParam();
-            userParam.setUserId("test"+count);
-            userParam.setUserName("테스터"+count);
-            userParam.setUserPw("password"+count);
-            userParam.setUserEmail(count+"@gmail.com");
-            userParam.setUserPhone("010-0000-000"+count);
+            userParam.setUserId("test"+i);
+            userParam.setUserName("테스터"+i);
+            userParam.setUserPw("password"+i);
+            userParam.setUserEmail(i+"@gmail.com");
+            userParam.setUserPhone("010-0000-000"+i);
             arrayList.add(userParam);
         }
         return arrayList;
     }
+    @Override
+    public UserParam updateParam() {
+        UserParam userParam = new UserParam();
+        userParam.setUserName("update");
+        userParam.setUserEmail("update@gmail.com");
+        return userParam;
+    }
+
+    @Override
+    public String toJson(UserParam param) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(param); //Object->Json
+    }
+
+
 }
