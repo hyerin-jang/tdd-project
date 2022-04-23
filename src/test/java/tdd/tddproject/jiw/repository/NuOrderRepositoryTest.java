@@ -1,11 +1,9 @@
 package tdd.tddproject.jiw.repository;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import tdd.tddproject.domain.entity.nu.NuDelivery;
 import tdd.tddproject.domain.entity.nu.NuOrder;
 import tdd.tddproject.domain.entity.nu.NuOrderItem;
@@ -17,9 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-@SpringBootTest
+//@SpringBootTest
+//@AutoConfigureTestDatabase DB 설정을 통해
+@DataJpaTest //order 생략가능한 테스트 어노테이션
 public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
 
     @Autowired
@@ -29,17 +30,37 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
 
     @BeforeEach
     public void setUp() {
+        NuDelivery nuDelivery = NuDelivery.builder()
+                .nuDeliveryNo(1L)
+                .nuDeliveryName("jiw")
+                .nuDeliveryPhone("123456789")
+                .nuDeliveryCity("어느도시")
+                .nuDeliveryDecode("어디어디")
+                .nuDeliveryDate(LocalDate.now().toString())
+                .build();
+        NuOrderItem nuOrderItem = NuOrderItem.builder()
+                .nuOrderItemNo(1L)
+                .nuOrderItemCount(1)
+                .nuOrderItemPrice(1000)
+                .nuOrderItemStatus("N")
+                .nuOrderItemRefund("N")
+                .build();
+        NuRefund nuRefund = NuRefund.builder()
+                .nuRefundNo(1L)
+                .nuRefundYn("Y")
+                .build();
+
         NuOrder nuOrder = NuOrder.builder()
                 .nuOrderNo(1L)
                 .nuOrderDate(LocalDate.now().toString())
                 .nuDeliveries(new ArrayList<>() {{
-                    add(new NuDelivery());
+                    add(nuDelivery);
                 }})
                 .nuOrderItems(new ArrayList<>() {{
-                    add(new NuOrderItem());
+                    add(nuOrderItem);
                 }})
                 .nuRefunds(new ArrayList<>() {{
-                    add(new NuRefund());
+                    add(nuRefund);
                 }})
                 .build();
 
@@ -51,7 +72,6 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
     }
 
     @Test
-    @Order(0)
     void 리스트_조회_테스트() {
         List<NuOrder> all = nuOrderRepository.findAll();
 
@@ -59,7 +79,6 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
     }
 
     @Test
-    @Order(1)
     void 조회_테스트() {
         Long nuOrderId = 1L;
 
@@ -70,7 +89,6 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
     }
 
     @Test
-    @Order(2)
     void 생성_테스트() {
         Long nuOrderId = 2L;
         String nuOrderDate = LocalDate.now()
@@ -84,11 +102,11 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
         NuOrder getNuOrder = nuOrderRepository.findById(nuOrderId)
                 .orElseThrow(NoSuchElementException::new);
 
-        assertEquals(newNuOrder, getNuOrder);
+        assertEquals(newNuOrder.getNuOrderNo(), getNuOrder.getNuOrderNo());
     }
 
+    //TODO 동시 테스트에 대한 무결성 확인
     @Test
-    @Order(3)
     void 수정_테스트() {
         Long nuOrderId = 1L;
         NuOrder getNuOrder = nuOrderRepository.findById(nuOrderId)
@@ -110,14 +128,13 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
     }
 
     @Test
-    @Order(4)
     void 삭제_테스트() {
         Long nuOrderId = 1L;
 
         nuOrderRepository.deleteById(nuOrderId);
         List<NuOrder> all = nuOrderRepository.findAll();
 
-        assertEquals(all.size(), this.nuOrderList.size());
+        assertEquals(all.size(), 0);
     }
 
 }

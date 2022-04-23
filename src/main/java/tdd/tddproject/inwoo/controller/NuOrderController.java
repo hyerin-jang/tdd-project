@@ -3,7 +3,6 @@ package tdd.tddproject.inwoo.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tdd.tddproject.domain.entity.nu.NuOrder;
-import tdd.tddproject.inwoo.dto.ResponseDataDto;
 import tdd.tddproject.inwoo.service.NuOrderService;
 import tdd.tddproject.inwoo.service.ResponseService;
 

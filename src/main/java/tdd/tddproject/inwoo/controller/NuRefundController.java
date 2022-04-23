@@ -1,11 +1,9 @@
 package tdd.tddproject.inwoo.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import tdd.tddproject.domain.entity.nu.NuRefund;
 import tdd.tddproject.inwoo.service.NuRefundService;
 
 @RestController
@@ -16,14 +14,20 @@ public class NuRefundController {
 	private final NuRefundService nuRefundService;
 
 	//환불
-	@PostMapping("/{nuOrderNo}")
-	public void 환불(@PathVariable Long nuOrderNo) { //TODO 메서드명 변경하기
-		nuRefundService.환불();
+	@PutMapping("/{nuRefundNo}")
+	public void refund(@PathVariable Long nuRefundNo) {
+		nuRefundService.refund(nuRefundNo);
 	}
 
+	//환불 조회
+	@GetMapping("/{nuRefundNo}")
+	public NuRefund getNuRefund(@PathVariable Long nuRefundNo) {
+		return nuRefundService.getNuRefund(nuRefundNo);
+	}
 
 	//환불 취소
-
-	//환불 조회
-
+	@PutMapping("/cancel/{nuRefundNo}")
+	public void cancelRefund(@PathVariable Long nuRefundNo) {
+		nuRefundService.cancelRefund(nuRefundNo);
+	}
 }
