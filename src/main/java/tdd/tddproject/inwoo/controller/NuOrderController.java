@@ -35,17 +35,17 @@ public class NuOrderController {
         return nuOrderService.getNuOrder(nuOrderNo);
     }
 
-    @PostMapping("/{nuOrderNo}}")
-    public void saveNuOrder(@PathVariable Long nuOrderNo, @RequestBody NuOrder nuOrder) {
+    @PostMapping
+    public void saveNuOrder(@RequestBody NuOrder nuOrder) {
         nuOrderService.saveNuOrder(nuOrder);
     }
 
-    @PutMapping("/{nuOrderNo}}")
+    @PutMapping("/{nuOrderNo}")
     public void updateNuOrder(@PathVariable Long nuOrderNo, @RequestBody NuOrder nuOrder) {
         nuOrderService.saveNuOrder(nuOrder);
     }
 
-    @DeleteMapping("/{nuOrderNo}}")
+    @DeleteMapping("/{nuOrderNo}")
     public void deleteNuOrder(@PathVariable Long nuOrderNo) {
         nuOrderService.deleteNuOrder(nuOrderNo);
     }
