@@ -3,6 +3,7 @@ package tdd.tddproject.hyechan.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.vo.user.UserParam;
@@ -24,8 +25,10 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
     UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Override
-    public User createEntity(UserParam param) {
-        return param.toEntity();
+    public User createEntity(UserParam param){
+        User user = param.toEntity();
+        ReflectionTestUtils.setField(user, "userNo", 1L);
+        return user;
     }
 
     @Override
@@ -34,6 +37,19 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         for (UserParam param : paramList) {
             User user = param.toEntity();
             arrayList.add(user);
+        }
+        return arrayList;
+    }
+
+    @Override
+    public ArrayList<User> createEntity(ArrayList<UserParam> paramList, String id) {
+        ArrayList<User> arrayList = new ArrayList<>();
+        Long index = 0L;
+        for (UserParam param : paramList) {
+            User user = param.toEntity();
+            ReflectionTestUtils.setField(user, id, index);
+            arrayList.add(user);
+            index++;
         }
         return arrayList;
     }
@@ -70,10 +86,9 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         userParam.setUserEmail("update@gmail.com");
         return userParam;
     }
-
     @Override
     public String toJson(UserParam param) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(param); //Object->Json
+        return new ObjectMapper().writeValueAsString(param);
     }
 
 
