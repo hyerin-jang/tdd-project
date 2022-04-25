@@ -16,6 +16,8 @@ import tdd.tddproject.rin.dto.ItemDto;
 import tdd.tddproject.rin.mapper.ItemMapper;
 import tdd.tddproject.rin.repository.ItemRepository;
 
+import javax.persistence.EntityManager;
+
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,6 +34,9 @@ public class ItemControllerIT {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     @BeforeAll
@@ -41,6 +46,8 @@ public class ItemControllerIT {
 
     @BeforeEach
     void beforeEach() {
+        //h2 pk generatedValue 초기화
+        entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
         System.out.println("@BeforeEach");
     }
 
@@ -131,6 +138,8 @@ public class ItemControllerIT {
                 .andDo(print());
 
     }
+
+    // TODO: update test
 
 
     @Test
