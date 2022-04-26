@@ -15,8 +15,6 @@ import tdd.tddproject.rin.service.impl.ItemServiceImpl;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -66,7 +64,6 @@ public class ItemServiceUT {
         List<ItemDto> itemDtoList = Arrays.asList(this.itemDto);
 
         List<Item> itemList = itemMapper.toEntityList(itemDtoList);
-        itemRepository.saveAll(itemList);
         given(itemRepository.findAll()).willReturn(itemList);
 
         //when
@@ -81,7 +78,6 @@ public class ItemServiceUT {
     public void findItemItemNameTest() {
         //given
         Item item = itemMapper.toEntity(this.itemDto);
-        itemRepository.save(item);
         given(itemRepository.findByItemName("nike")).willReturn(item);
 
         //when
