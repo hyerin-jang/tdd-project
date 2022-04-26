@@ -12,13 +12,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.item.Item;
+import tdd.tddproject.domain.entity.nu.NuOrder;
 import tdd.tddproject.rin.dto.ItemDto;
 import tdd.tddproject.rin.mapper.ItemMapper;
 import tdd.tddproject.rin.repository.ItemRepository;
 
 import javax.persistence.EntityManager;
 
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -140,7 +143,29 @@ public class ItemControllerIT {
     }
 
     // TODO: update test
+    @Test
+    public void updateItemTest() throws Exception {
+        //given
+        Long itemNo = 1L;
+        ItemDto itemDto = ItemDto.builder()
+                .itemComp("nike")
+                .itemName("hat")
+                .itemPrice(20000)
+                .itemStock(3).build();
 
+        String content = new ObjectMapper().writeValueAsString(itemDto);
+
+        //when
+        ResultActions resultActions = mockMvc.perform((put("/item/{itemNo}", itemNo)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON)));
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 
     @Test
     public void deleteItemTest() throws Exception {
