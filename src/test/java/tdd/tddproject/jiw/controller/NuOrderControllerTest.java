@@ -1,31 +1,29 @@
 package tdd.tddproject.jiw.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import tdd.tddproject.domain.entity.nu.NuOrder;
-import tdd.tddproject.inwoo.controller.NuOrderController;
-import tdd.tddproject.inwoo.service.NuOrderService;
-import tdd.tddproject.inwoo.service.ResponseService;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import tdd.tddproject.domain.entity.nu.NuOrder;
+import tdd.tddproject.inwoo.controller.NuOrderController;
+import tdd.tddproject.inwoo.service.NuOrderService;
+import tdd.tddproject.inwoo.service.ResponseService;
 
 @WebMvcTest(NuOrderController.class)
 public class NuOrderControllerTest {
@@ -69,7 +67,7 @@ public class NuOrderControllerTest {
 
         resultActions
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.result.nuOrderNo").value(nuOrderNo))
+               .andExpect(jsonPath("$..nuOrderNo").value(1))
                 .andDo(print());
     }
 
@@ -92,11 +90,9 @@ public class NuOrderControllerTest {
 
         resultActions
                 .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.result", Matchers.hasSize(2)))
-//                .andExpect(jsonPath("$.result[0].nuOrderNo").value("1"))
-//                .andExpect(jsonPath("$.result[1].nuOrderNo").value("2"))
+                .andExpect(jsonPath("$[0].nuOrderNo").value(1))
+                .andExpect(jsonPath("$[1].nuOrderNo").value(2))
                 .andDo(print());
-
     }
 
     @Test
