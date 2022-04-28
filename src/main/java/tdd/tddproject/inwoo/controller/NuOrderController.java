@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/nuorder")
 public class NuOrderController {
 
     private final NuOrderService nuOrderService;
