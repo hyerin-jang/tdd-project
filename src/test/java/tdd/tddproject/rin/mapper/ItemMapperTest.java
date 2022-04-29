@@ -5,7 +5,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.item.Item;
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
 
 import static org.assertj.core.api.Assertions.*;
 

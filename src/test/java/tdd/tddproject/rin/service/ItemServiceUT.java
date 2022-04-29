@@ -7,10 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tdd.tddproject.domain.entity.item.Item;
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
 import tdd.tddproject.rin.mapper.ItemMapper;
-import tdd.tddproject.rin.repository.ItemRepository;
-import tdd.tddproject.rin.service.impl.ItemServiceImpl;
+import tdd.tddproject.rin.item.repository.ItemRepository;
+import tdd.tddproject.rin.item.service.impl.ItemServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import tdd.tddproject.domain.entity.item.Item;
+import tdd.tddproject.rin.item.repository.ItemRepository;
 
 import java.util.List;
 

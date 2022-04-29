@@ -9,8 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import tdd.tddproject.rin.dto.ItemDto;
-import tdd.tddproject.rin.service.ItemService;
+import tdd.tddproject.rin.item.dto.ItemDto;
+import tdd.tddproject.rin.item.controller.ItemController;
+import tdd.tddproject.rin.item.service.ItemService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
