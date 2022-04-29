@@ -21,6 +21,7 @@ public interface ConstructorCreate<E, P> {
     ArrayList<E> createEntity(ArrayList<P> paramList, String id);
     P createParam();
     ArrayList<P> createParam(int count);
-    String toJson(P param) throws JsonProcessingException;
     P updateParam();
+    String toJson(P param) throws JsonProcessingException;
+
 }
