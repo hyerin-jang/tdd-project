@@ -1,4 +1,4 @@
-package tdd.tddproject.hyechan.controller.integationTest;
+package tdd.tddproject.hyechan.Integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -57,7 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc // mockMvc Dependency Injection.
 @AutoConfigureRestDocs // RestDocs Dependency Injection
 @Transactional // 트랜잭션 롤백
-class UserControllerIntegrationTest extends UserConstructor {
+class UserIntegrationTest extends UserConstructor {
 
     @Autowired
     private MockMvc mockMvc; // url주소로 테스트

@@ -1,4 +1,4 @@
-package tdd.tddproject.hyechan.controller.unitTest;
+package tdd.tddproject.hyechan.controller;
 
 
 // 단위 테스트 : Controller, Filter, ControllerAdvice
