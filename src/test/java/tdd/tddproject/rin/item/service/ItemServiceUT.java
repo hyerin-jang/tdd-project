@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.service;
+package tdd.tddproject.rin.item.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;

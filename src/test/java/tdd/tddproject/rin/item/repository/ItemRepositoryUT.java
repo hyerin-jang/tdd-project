@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.repository;
+package tdd.tddproject.rin.item.repository;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

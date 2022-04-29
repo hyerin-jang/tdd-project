@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.controller;
+package tdd.tddproject.rin.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
