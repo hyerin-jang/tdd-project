@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.dto;
+package tdd.tddproject.rin.item.dto;
 
 import lombok.Builder;
 import lombok.Data;

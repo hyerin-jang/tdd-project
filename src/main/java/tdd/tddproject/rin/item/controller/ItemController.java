@@ -1,12 +1,12 @@
-package tdd.tddproject.rin.controller;
+package tdd.tddproject.rin.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tdd.tddproject.rin.dto.ItemDto;
-import tdd.tddproject.rin.service.ItemService;
+import tdd.tddproject.rin.item.dto.ItemDto;
+import tdd.tddproject.rin.item.service.ItemService;
 
 import java.util.List;
 

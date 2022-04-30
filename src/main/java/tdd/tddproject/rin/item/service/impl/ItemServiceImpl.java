@@ -1,14 +1,14 @@
-package tdd.tddproject.rin.service.impl;
+package tdd.tddproject.rin.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.item.Item;
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
+import tdd.tddproject.rin.item.service.ItemService;
 import tdd.tddproject.rin.mapper.ItemMapper;
-import tdd.tddproject.rin.repository.ItemRepository;
-import tdd.tddproject.rin.service.ItemService;
+import tdd.tddproject.rin.item.repository.ItemRepository;
 
 import java.util.List;
 
