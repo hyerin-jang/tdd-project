@@ -21,6 +21,9 @@ import tdd.tddproject.hyechan.util.AddressConstructor;
 import javax.persistence.EntityManager;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,8 +70,11 @@ public class AddressTest extends AddressConstructor {
                 .andExpect(jsonPath("$.result.addressPhone").value(ADDRESS_PHONE))
                 .andExpect(jsonPath("$.result.addressZip").value(ADDRESS_ZIP))
                 .andExpect(jsonPath("$.result.addressStreet").value(ADDRESS_STREET))
-                .andDo(MockMvcResultHandlers.print());
-
+                .andDo(MockMvcResultHandlers.print())
+                // SPRING REST DOCS
+                .andDo(document("address/address_get",
+                        pathParameters(parameterWithName("id").description("address 번호"))
+                ));
 
     }
 
