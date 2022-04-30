@@ -16,7 +16,7 @@ public class CategoryControllerUT {
     private MockMvc mockMvc;
 
     @Test
-    void getCategoryTest() throws Exception {
+    void 카테고리_조회() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/category"))
                 .andExpect(status().isOk())
