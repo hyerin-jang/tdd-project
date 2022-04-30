@@ -2,7 +2,7 @@ package tdd.tddproject.hyechan.service;
 
 // 단위 테스트 ( Service 관련된 애들만 메모리에 띄움)
 // BoardRepository 가짜 객체로  - Mock
-
+//docall메서드
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,7 +54,7 @@ public class UserServiceUnitTest extends UserConstructor {
 //        // 1. user 엔티티 직접 userNo를 셋팅한다. ( 테스트 때문에 setUserNo 메서드? )
 //        // 2. 반환을.. userNo를 사용하지 않는다. ( 테스트 때문에? )
 //        //then
-//        assertEquals(user.getUserNo(),userNo);
+//        assertEquals(user.getUserNo(), userNo);
 //    }
 
     @Test
@@ -84,10 +84,22 @@ public class UserServiceUnitTest extends UserConstructor {
     @Test
     public void user_update_test() throws Exception{
         //given
+        /*
+        Long userNo = 1L;
+        User entity = createEntity(createParam());
+        UserParam updateParam = updateParam();
 
+        userRepository.updateUser();
+        //FIXME : update해서 받는 entity는 실 업데이트가 안 된 엔티티인데,
+        //FIXME : 검증을 할 수 없다고.. 그냥 써도 되는 게 맞을까?
+
+        doNothing().when(userRepository).updateUser(userNo, updateParam);
+        when(userRepository.findById(userNo)).thenReturn(Optional.ofNullable(entity));
         //when
-
+        userService.update(userNo, updateParam());
         //then
+        verify(userRepository, times(1)).updateUser(userNo, updateParam);
+        */
     }
     @Test
     public void user_delete_test() throws Exception{
