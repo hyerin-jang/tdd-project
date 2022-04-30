@@ -57,7 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc // mockMvc Dependency Injection.
 @AutoConfigureRestDocs // RestDocs Dependency Injection
 @Transactional // 트랜잭션 롤백
-class UserIntegrationTest extends UserConstructor {
+class UserTest extends UserConstructor {
 
     @Autowired
     private MockMvc mockMvc; // url주소로 테스트
