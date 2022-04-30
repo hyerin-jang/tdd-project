@@ -19,8 +19,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class NuOrderServiceTest {
 
-    @Mock
-    NuOrderService nuOrderService;
+    @Mock NuOrderService nuOrderService;
 
     NuOrder nuOrder;
     List<NuOrder> nuOrders;
