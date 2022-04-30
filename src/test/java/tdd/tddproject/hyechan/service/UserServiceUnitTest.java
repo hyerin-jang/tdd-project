@@ -5,22 +5,29 @@ package tdd.tddproject.hyechan.service;
 //docall메서드
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.repository.UserRepository;
 import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.will;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // springboot x, Mockito 따로 띄움
@@ -36,26 +43,22 @@ public class UserServiceUnitTest extends UserConstructor {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     // Mock 을 사용하면 실질적인 instance 가 아닌 가짜 객체를 생성하는 반면에 Spy 는 실질질적으로 존재하는 instance 를 wraping 한 객체를 생성
 
-//    @Test
-//    public void user_add_test() throws Exception{
-//        //BOD Mockito 방식
-//        //given
-//        UserParam userParam = createUserParam();
-//        User user = createUserEntity(userParam);
-//        //stub 동작 지정
-//        /*
-//            when(userRepository.save(user)).thenReturn(user);
-//            기대 값과 실제 값 strict 체크, -> lenient 허술하게 체크
-//         */
-//        lenient().when(userRepository.save(user)).thenReturn(user);
-//        //when test execute
-//        Long userNo = userService.add(userParam);
-//        // FIXME : db를 거치지 않기 때문에 userNo가 없음... how?
-//        // 1. user 엔티티 직접 userNo를 셋팅한다. ( 테스트 때문에 setUserNo 메서드? )
-//        // 2. 반환을.. userNo를 사용하지 않는다. ( 테스트 때문에? )
-//        //then
-//        assertEquals(user.getUserNo(), userNo);
-//    }
+    @Test
+    public void user_add_test() throws Exception{
+        //given
+        UserParam param = createParam();
+        User user = createEntity(param);
+//        when(userRepository.save(user)).thenReturn(user);
+//        실 UserService 에서 들어가는 엔티티 user, createEntity() !=equals
+        when(userRepository.save(any())).thenReturn(user);
+        //when test execute
+        Long add = userService.add(param);
+        //then
+        assertEquals(add, user.getUserNo());
+        //순서대로 return
+        // when(userRepository.save(user).getUserNo()).thenReturn(1L, 2L, 3L);
+
+    }
 
     @Test
     public void user_getList_test() throws Exception{
@@ -84,29 +87,29 @@ public class UserServiceUnitTest extends UserConstructor {
     @Test
     public void user_update_test() throws Exception{
         //given
-        /*
         Long userNo = 1L;
-        User entity = createEntity(createParam());
+        User user = createEntity(createParam());
         UserParam updateParam = updateParam();
 
-        userRepository.updateUser();
-        //FIXME : update해서 받는 entity는 실 업데이트가 안 된 엔티티인데,
-        //FIXME : 검증을 할 수 없다고.. 그냥 써도 되는 게 맞을까?
+        user.update(updateParam.getUserName(),updateParam.getUserEmail(),updateParam.getUserPhone());
+        // querydsl, repository QUERY 생성하는 거여서 사용할 수 없음. 일단 update 메서드 사용.
 
         doNothing().when(userRepository).updateUser(userNo, updateParam);
-        when(userRepository.findById(userNo)).thenReturn(Optional.ofNullable(entity));
+        when(userRepository.findById(userNo)).thenReturn(Optional.of(user));
         //when
         userService.update(userNo, updateParam());
         //then
         verify(userRepository, times(1)).updateUser(userNo, updateParam);
-        */
     }
     @Test
     public void user_delete_test() throws Exception{
         //given
-
+        Long userNo = 1L;
+        // 없어도 되는데.. 명시적으로 하기 위해 적어둔다.
+        doNothing().when(userRepository).deleteById(userNo);
         //when
-
+        userService.delete(userNo);
         //then
+        verify(userRepository, times(1)).deleteById(userNo);
     }
 }
