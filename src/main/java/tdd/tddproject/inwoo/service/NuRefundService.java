@@ -24,7 +24,7 @@ public class NuRefundService {
 
 	public NuRefund getNuRefund(Long nuRefundNo) {
 		//TODO JPA에서 enum 어떻게 다루는지? or 해당 Y, N값을 어떻게 유틸 클래스로 빼서 사용할지 알아보기
-		return nuRefundRepository.findByIdAAndNuRefundYn(nuRefundNo, "Y")
+		return nuRefundRepository.findByNuRefundNoAndNuRefundYn(nuRefundNo, "Y")
 				.orElseThrow(NoSuchElementException::new);
 	}
 
