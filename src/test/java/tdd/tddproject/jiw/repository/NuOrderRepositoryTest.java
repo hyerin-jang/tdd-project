@@ -1,5 +1,6 @@
 package tdd.tddproject.jiw.repository;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -75,7 +78,7 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
     void 리스트_조회_테스트() {
         List<NuOrder> all = nuOrderRepository.findAll();
 
-        assertEquals(all.size(), this.nuOrderList.size());
+        assertThat(all.size()).isEqualTo(nuOrderList.size());
     }
 
     @Test
@@ -85,7 +88,7 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
         NuOrder getNuOrder = nuOrderRepository.findById(nuOrderId)
                 .orElseThrow(NoSuchElementException::new);
 
-        assertEquals(getNuOrder.getNuOrderNo(), nuOrderId);
+        assertThat(getNuOrder.getNuOrderNo()).isEqualTo(nuOrderId);
     }
 
     @Test
@@ -102,7 +105,7 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
         NuOrder getNuOrder = nuOrderRepository.findById(nuOrderId)
                 .orElseThrow(NoSuchElementException::new);
 
-        assertEquals(newNuOrder.getNuOrderNo(), getNuOrder.getNuOrderNo());
+        assertThat(newNuOrder.getNuOrderNo()).isEqualTo(getNuOrder.getNuOrderNo());
     }
 
     //TODO 동시 테스트에 대한 무결성 확인
@@ -125,6 +128,10 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
         assertNotEquals(getNuOrder, getNuOrder2);
         assertEquals(getNuOrder2.getNuOrderNo(), nuOrderId);
         assertEquals(getNuOrder2.getNuOrderDate(), now);
+
+        assertThat(getNuOrder.getNuOrderNo()).isNotEqualTo(getNuOrder2.getNuOrderNo());
+        assertThat(getNuOrder2.getNuOrderNo()).isEqualTo(nuOrderId);
+        assertThat(getNuOrder2.getNuOrderDate()).isEqualTo(now);
     }
 
     @Test
@@ -134,7 +141,7 @@ public class NuOrderRepositoryTest {    //TODO H2 실행시켜 테스트
         nuOrderRepository.deleteById(nuOrderId);
         List<NuOrder> all = nuOrderRepository.findAll();
 
-        assertEquals(all.size(), 0);
+        assertThat(all.size()).isEqualTo(0);
     }
 
 }
