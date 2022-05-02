@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Transactional
+//@Transactional DataJpaTest에 들어있음.
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY) // 가짜 DB, Replace.NONE 실제 DB
 @DataJpaTest // jpa 관련 빈, SpringExtension 포함
 public class UserRepositoryUnitTest extends UserConstructor {

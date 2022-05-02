@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.service;
+package tdd.tddproject.rin.item.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,15 +7,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tdd.tddproject.domain.entity.item.Item;
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
 import tdd.tddproject.rin.mapper.ItemMapper;
-import tdd.tddproject.rin.repository.ItemRepository;
+import tdd.tddproject.rin.item.repository.ItemRepository;
+import tdd.tddproject.rin.item.service.impl.ItemServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceUT {
@@ -24,7 +26,7 @@ public class ItemServiceUT {
     ItemRepository itemRepository;
 
     @InjectMocks
-    ItemService itemService;
+    ItemServiceImpl itemServiceImpl;
 
     ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
@@ -62,34 +64,28 @@ public class ItemServiceUT {
         List<ItemDto> itemDtoList = Arrays.asList(this.itemDto);
 
         List<Item> itemList = itemMapper.toEntityList(itemDtoList);
-        itemRepository.saveAll(itemList);
         given(itemRepository.findAll()).willReturn(itemList);
 
         //when
-        List<ItemDto> itemServiceResult = itemService.findAllItem();
+        List<ItemDto> itemServiceResult = itemServiceImpl.findAllItem();
 
         //then
-        assertThat(itemList.get(0).getItemComp()).isEqualTo(itemServiceResult.get(0).getItemComp());
-        assertThat(itemList.get(0).getItemName()).isEqualTo(itemServiceResult.get(0).getItemName());
-        assertThat(itemList.get(0).getItemPrice()).isEqualTo(itemServiceResult.get(0).getItemPrice());
-        assertThat(itemList.get(0).getItemStock()).isEqualTo(itemServiceResult.get(0).getItemStock());
+        verify(itemRepository, times(1)).findAll();
+
     }
 
     @Test
     public void findItemItemNameTest() {
         //given
         Item item = itemMapper.toEntity(this.itemDto);
-        itemRepository.save(item);
         given(itemRepository.findByItemName("nike")).willReturn(item);
 
         //when
-        ItemDto itemServiceResult = itemService.findItemByItemName("nike");
+        ItemDto itemServiceResult = itemServiceImpl.findItemByItemName("nike");
 
         //then
-        assertThat(item.getItemComp()).isEqualTo(itemServiceResult.getItemComp());
-        assertThat(item.getItemName()).isEqualTo(itemServiceResult.getItemName());
-        assertThat(item.getItemPrice()).isEqualTo(itemServiceResult.getItemPrice());
-        assertThat(item.getItemStock()).isEqualTo(itemServiceResult.getItemStock());
+        verify(itemRepository, times(1)).findByItemName("nike");
+
     }
 
     @Test

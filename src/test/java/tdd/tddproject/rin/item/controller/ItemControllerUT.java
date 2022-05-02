@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.controller;
+package tdd.tddproject.rin.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -9,8 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import tdd.tddproject.rin.dto.ItemDto;
-import tdd.tddproject.rin.service.ItemService;
+import tdd.tddproject.rin.item.dto.ItemDto;
+import tdd.tddproject.rin.item.controller.ItemController;
+import tdd.tddproject.rin.item.service.ItemService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -75,12 +76,12 @@ public class ItemControllerUT {
     public void findItemByItemNameTest() throws Exception {
         //given
         ItemDto itemDto = this.itemDto;
-        Long itemNo = itemDto.getItemNo();
+        String itemName = itemDto.getItemName();
 
         given(itemService.findItemByItemName(any())).willReturn(itemDto);
 
         //when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemNo));
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemName));
 
         //then
         resultActions
@@ -110,6 +111,8 @@ public class ItemControllerUT {
         resultActions
                 .andExpect(status().isOk())
                 .andDo(print());
+
+        //참고 verify(userService, times(1)).delete(userNo);
     }
 
     @Test

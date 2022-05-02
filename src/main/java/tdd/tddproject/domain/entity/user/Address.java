@@ -1,6 +1,7 @@
 package tdd.tddproject.domain.entity.user;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -47,4 +48,13 @@ public class Address {
     //1:1 유저
     @OneToOne(mappedBy="address", fetch = FetchType.LAZY)
     private User user;
+
+    @Builder
+    public Address(String addressZip, String addressCity, String addressStreet, String addressReceiver, String addressPhone){
+        this.addressZip = addressZip;
+        this.addressCity = addressCity;
+        this.addressStreet = addressStreet;
+        this.addressReceiver = addressReceiver;
+        this.addressPhone = addressPhone;
+    }
 }

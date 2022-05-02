@@ -1,6 +1,6 @@
-package tdd.tddproject.rin.service;
+package tdd.tddproject.rin.item.service;
 
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
 
 import java.util.List;
 

@@ -1,9 +1,8 @@
-package tdd.tddproject.hyechan.controller.unitTest;
+package tdd.tddproject.hyechan.controller;
 
 
 // 단위 테스트 : Controller, Filter, ControllerAdvice
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;

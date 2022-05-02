@@ -1,4 +1,4 @@
-package tdd.tddproject.rin.controller;
+package tdd.tddproject.rin.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -12,11 +12,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.item.Item;
-import tdd.tddproject.rin.dto.ItemDto;
+import tdd.tddproject.rin.item.dto.ItemDto;
 import tdd.tddproject.rin.mapper.ItemMapper;
-import tdd.tddproject.rin.repository.ItemRepository;
+import tdd.tddproject.rin.item.repository.ItemRepository;
+
+import javax.persistence.EntityManager;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,6 +35,9 @@ public class ItemControllerIT {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
     ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     @BeforeAll
@@ -41,6 +47,8 @@ public class ItemControllerIT {
 
     @BeforeEach
     void beforeEach() {
+        //h2 pk generatedValue 초기화
+        entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
         System.out.println("@BeforeEach");
     }
 
@@ -132,6 +140,30 @@ public class ItemControllerIT {
 
     }
 
+    // TODO: update test
+    @Test
+    public void updateItemTest() throws Exception {
+        //given
+        Long itemNo = 1L;
+        ItemDto itemDto = ItemDto.builder()
+                .itemComp("nike")
+                .itemName("hat")
+                .itemPrice(20000)
+                .itemStock(3).build();
+
+        String content = new ObjectMapper().writeValueAsString(itemDto);
+
+        //when
+        ResultActions resultActions = mockMvc.perform((put("/item/{itemNo}", itemNo)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON)));
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 
     @Test
     public void deleteItemTest() throws Exception {

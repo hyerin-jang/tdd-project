@@ -3,6 +3,7 @@ package tdd.tddproject.hyechan.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.vo.user.UserParam;
@@ -24,8 +25,10 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
     UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
     @Override
-    public User createEntity(UserParam param) {
-        return param.toEntity();
+    public User createEntity(UserParam param){
+        User user = param.toEntity();
+        ReflectionTestUtils.setField(user, "userNo", 1L);
+        return user;
     }
 
     @Override
@@ -39,27 +42,40 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
     }
 
     @Override
+    public ArrayList<User> createEntity(ArrayList<UserParam> paramList, String id) {
+        ArrayList<User> arrayList = new ArrayList<>();
+        Long index = 0L;
+        for (UserParam param : paramList) {
+            User user = param.toEntity();
+            ReflectionTestUtils.setField(user, id, index);
+            arrayList.add(user);
+            index++;
+        }
+        return arrayList;
+    }
+
+    @Override
     public UserParam createParam() {
-        UserParam userParam = new UserParam();
-        userParam.setUserId("test");
-        userParam.setUserName("햇찬");
-        userParam.setUserPw("test123");
-        userParam.setUserEmail("dhgpcks@gmail.com");
-        userParam.setUserPhone("010-1111-1111");
-        return userParam;
+        UserParam param = new UserParam();
+        param.setUserId("test");
+        param.setUserName("햇찬");
+        param.setUserPw("test123");
+        param.setUserEmail("dhgpcks@gmail.com");
+        param.setUserPhone("010-1111-1111");
+        return param;
     }
 
     @Override
     public ArrayList<UserParam> createParam(int count) {
         ArrayList<UserParam> arrayList = new ArrayList<>();
         for(int i = 0; i < count; i ++){
-            UserParam userParam = new UserParam();
-            userParam.setUserId("test"+i);
-            userParam.setUserName("테스터"+i);
-            userParam.setUserPw("password"+i);
-            userParam.setUserEmail(i+"@gmail.com");
-            userParam.setUserPhone("010-0000-000"+i);
-            arrayList.add(userParam);
+            UserParam param = new UserParam();
+            param.setUserId("test"+i);
+            param.setUserName("테스터"+i);
+            param.setUserPw("password"+i);
+            param.setUserEmail(i+"@gmail.com");
+            param.setUserPhone("010-0000-000"+i);
+            arrayList.add(param);
         }
         return arrayList;
     }
@@ -70,10 +86,9 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         userParam.setUserEmail("update@gmail.com");
         return userParam;
     }
-
     @Override
     public String toJson(UserParam param) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(param); //Object->Json
+        return new ObjectMapper().writeValueAsString(param);
     }
 
 
