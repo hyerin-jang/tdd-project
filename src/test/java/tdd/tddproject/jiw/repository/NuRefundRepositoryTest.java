@@ -1,5 +1,6 @@
 package tdd.tddproject.jiw.repository;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 
 @DataJpaTest
@@ -56,13 +58,34 @@ public class NuRefundRepositoryTest {
         NuRefund getNuRefund = nuRefundRepository.findById(1L)
                 .orElseThrow(NoSuchElementException::new);
 
-        assertEquals(getNuRefund.getNuRefundNo(), nuRefund.getNuRefundNo());
-        assertEquals(getNuRefund.getNuRefundYn(), nuRefund.getNuRefundYn());
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
     }
 
     @Test
     void 환불_취소() {
+        NuRefund nuRefund = nuRefundRepository.findById(1L)
+                .orElseThrow(NoSuchElementException::new);
+        nuRefund.setRefundCancel();
 
+        nuRefundRepository.save(nuRefund);
+
+        NuRefund getNuRefund = nuRefundRepository.findById(1L)
+                .orElseThrow(NoSuchElementException::new);
+
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
+    }
+
+    @Test
+    void 환불_조회() {
+        NuRefund nuRefund = nuRefundRepository.findById(1L)
+                .orElseThrow(NoSuchElementException::new);
+
+        NuRefund getNuRefund = nuRefundList.get(0);
+
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
+        assertThat(getNuRefund.getNuRefundNo()).isEqualTo(nuRefund.getNuRefundNo());
     }
 
 }
