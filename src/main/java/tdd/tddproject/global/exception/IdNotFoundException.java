@@ -11,4 +11,7 @@ public class IdNotFoundException extends ExceptionSupport {
     public IdNotFoundException(String message) {
         super(HttpStatus.NOT_FOUND, 404, message);
     }
+    public IdNotFoundException() {
+        super(HttpStatus.NOT_FOUND, 404, "해당 PK id를 찾을 수 없습니다");
+    }
 }
