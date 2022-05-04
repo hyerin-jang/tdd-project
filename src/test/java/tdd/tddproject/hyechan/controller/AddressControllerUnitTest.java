@@ -1,5 +1,7 @@
 package tdd.tddproject.hyechan.controller;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -12,11 +14,17 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.IdNotFoundException;
+import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 
+import java.util.Optional;
+
+
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,10 +40,12 @@ public class AddressControllerUnitTest extends AddressConstructor {
     AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
 
     Long id;
+    Long failId;
 
     @BeforeEach
     public void init() {
         id = 1L;
+        failId = 1000L;
     }
 
     // @author: hyechan, @since: 2022/04/30 3:40 오후
@@ -58,5 +68,18 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .andExpect(jsonPath("$.result.addressStreet").value(ADDRESS_STREET))
                 .andDo(MockMvcResultHandlers.print());
 
+    }
+
+    // @author: hyechan, @since: 2022/05/04 9:15 오후
+    @Test
+    void 주소록_단건_조회_실패() throws Exception{
+
+        given(addressService.getById(failId))
+                .willThrow(new IdNotFoundException("NotFound"+failId));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/address/{id}", failId)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
     }
 }

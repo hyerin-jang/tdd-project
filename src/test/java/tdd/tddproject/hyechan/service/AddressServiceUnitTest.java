@@ -1,11 +1,13 @@
 package tdd.tddproject.hyechan.service;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
@@ -26,10 +28,12 @@ class AddressServiceUnitTest extends AddressConstructor {
     AddressRepository addressRepository;
 
     Long id;
+    Long failId;
 
     @BeforeEach
     public void init(){
         id = 1L;
+        failId = 1000L;
     }
 
     @Test
@@ -40,6 +44,20 @@ class AddressServiceUnitTest extends AddressConstructor {
         AddressDto dto = addressService.getById(id);
         //then
         assertEquals(dto.getAddressId(), id);
+    }
+
+    // @author: hyechan, @since: 2022/05/04 9:15 오후
+    @Test
+    void 주소록_단건_조회_실패() throws Exception{
+        //given
+        given(addressRepository.findById(failId))
+                .willThrow(new IdNotFoundException());
+
+        Assertions.assertThatThrownBy(()->
+        //when
+                addressService.getById(failId))
+        //then
+                .isInstanceOf(IdNotFoundException.class);
     }
 
 }

@@ -44,10 +44,12 @@ public class AddressTest extends AddressConstructor {
     private AddressRepository addressRepository;
 
     Long id;
+    Long failId;
 
     @BeforeEach
     public void init(){
         id = 1L;
+        failId = 1000L;
         entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
     }
 
@@ -78,4 +80,17 @@ public class AddressTest extends AddressConstructor {
 
     }
 
+
+    // @author: hyechan, @since: 2022/05/04 9:15 오후
+    @Test
+    void 주소록_단건_조회_실패() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/address/{id}", failId)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+    }
 }

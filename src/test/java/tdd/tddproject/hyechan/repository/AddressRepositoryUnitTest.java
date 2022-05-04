@@ -41,4 +41,5 @@ public class AddressRepositoryUnitTest extends AddressConstructor {
         Assertions.assertEquals(address.getAddressReceiver(), ADDRESS_RECEIVER);
         Assertions.assertEquals(address.getAddressPhone(), ADDRESS_PHONE);
     }
+
 }
