@@ -26,6 +26,7 @@ public class AddressRepositoryUnitTest extends AddressConstructor {
         id = 1L;
     }
 
+    // 테스트 주도방식이면 이 코드 짤 필요 없음
     @Test
     void 주소록_단건_조회_성공() throws Exception{
         //given

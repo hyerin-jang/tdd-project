@@ -13,6 +13,8 @@ import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
@@ -27,5 +29,10 @@ public class AddressService {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("해당 주소가 존재하지 않습니다."));
         return mapper.toDto(address);
+    }
+
+    public List<AddressDto> getList() {
+        List<Address> list = addressRepository.findAll();
+        return mapper.toDtoList(list);
     }
 }

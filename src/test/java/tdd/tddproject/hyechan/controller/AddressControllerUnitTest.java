@@ -1,6 +1,7 @@
 package tdd.tddproject.hyechan.controller;
 
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +22,7 @@ import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -81,5 +84,21 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void 주소록_리스트_조회() throws Exception{
+        //given
+        ArrayList<Address> list = createEntity(createParam(3));
+        given(addressService.getList()).willReturn(mapper.toDtoList(list));
+
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/address")
+                .accept(MediaType.APPLICATION_JSON_VALUE));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.result.[0].addressCity").value(ADDRESS_CITY+0))
+                .andExpect(jsonPath("$.result.[1].addressReceiver").value(ADDRESS_RECEIVER+1))
+                .andExpect(jsonPath("$.result.[2].addressPhone").value(ADDRESS_PHONE.substring(0,ADDRESS_PHONE.length() -1)+2));
     }
 }

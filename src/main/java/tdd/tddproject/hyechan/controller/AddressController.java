@@ -20,4 +20,10 @@ public class AddressController {
         return ResponseEntity.ok()
                 .body(getMap(addressService.getById(id)));
     }
+
+    @GetMapping("/address")
+    public ResponseEntity<?> getList(){
+        return ResponseEntity.ok()
+                .body(getMap(addressService.getList()));
+    }
 }

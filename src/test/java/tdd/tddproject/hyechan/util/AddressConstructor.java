@@ -2,9 +2,11 @@ package tdd.tddproject.hyechan.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.UserParam;
 
 import java.util.ArrayList;
 
@@ -50,7 +52,17 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
 
     @Override
     public ArrayList<AddressParam> createParam(int count) {
-        return null;
+        ArrayList<AddressParam> arrayList = new ArrayList<>();
+        for(int i = 0; i < count; i ++){
+            AddressParam param = new AddressParam();
+            param.setAddressCity(ADDRESS_CITY+i);
+            param.setAddressReceiver(ADDRESS_RECEIVER+i);
+            param.setAddressPhone(ADDRESS_PHONE.substring(0, ADDRESS_PHONE.length() -1)+i);
+            param.setAddressStreet(ADDRESS_STREET+i);
+            param.setAddressZip(ADDRESS_ZIP.substring(0,ADDRESS_ZIP.length() -1)+i);
+            arrayList.add(param);
+        }
+        return arrayList;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.Integration;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,8 @@ import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -92,5 +95,21 @@ public class AddressTest extends AddressConstructor {
         //then
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void 주소록_리스트_조회() throws Exception{
+        //given
+        ArrayList<Address> list = createEntity(createParam(3));
+        addressRepository.saveAll(list);
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/address")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.result.[1].addressCity").value(ADDRESS_CITY+1))
+                .andExpect(jsonPath("$.result.[2].addressReceiver").value(ADDRESS_RECEIVER+2))
+                .andExpect(jsonPath("$.result.[3].addressPhone").value(ADDRESS_PHONE.substring(0,ADDRESS_PHONE.length() -1)+3));
     }
 }
