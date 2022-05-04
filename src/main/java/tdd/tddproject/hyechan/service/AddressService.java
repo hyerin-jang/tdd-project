@@ -3,6 +3,8 @@ package tdd.tddproject.hyechan.service;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
+기import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.dto.UserDto;
@@ -11,6 +13,7 @@ import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 
 @Service
+@Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
 @RequiredArgsConstructor
 public class AddressService {
 
