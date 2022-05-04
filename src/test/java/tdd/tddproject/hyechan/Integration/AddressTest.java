@@ -43,10 +43,11 @@ public class AddressTest extends AddressConstructor {
     @Autowired
     private AddressRepository addressRepository;
 
-
+    Long id;
 
     @BeforeEach
     public void init(){
+        id = 1L;
         entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
     }
 
@@ -55,7 +56,6 @@ public class AddressTest extends AddressConstructor {
     @Test
     void 주소록_단건_조회_성공() throws Exception{
         //given
-        Long id = 1L;
         Address address = createEntity(createParam());
         addressRepository.save(address);
         //when

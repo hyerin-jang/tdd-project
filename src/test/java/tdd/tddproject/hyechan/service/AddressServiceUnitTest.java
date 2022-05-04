@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,14 +25,21 @@ class AddressServiceUnitTest extends AddressConstructor {
     @Mock
     AddressRepository addressRepository;
 
+    Long id;
+
+    @BeforeEach
+    public void init(){
+        id = 1L;
+    }
+
     @Test
     void 주소록_단건_조회_성공() throws Exception{
         //given
-        given(addressRepository.findById(1L)).willReturn(Optional.ofNullable(createEntity(createParam())));
+        given(addressRepository.findById(id)).willReturn(Optional.ofNullable(createEntity(createParam())));
         //when
-        AddressDto dto = addressService.getById(1L);
+        AddressDto dto = addressService.getById(id);
         //then
-        assertEquals(dto.getAddressId(), 1L);
+        assertEquals(dto.getAddressId(), id);
     }
 
 }

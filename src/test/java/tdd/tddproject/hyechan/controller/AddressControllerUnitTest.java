@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
@@ -15,7 +17,6 @@ import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,15 +31,21 @@ public class AddressControllerUnitTest extends AddressConstructor {
 
     AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
 
+    Long id;
+
+    @BeforeEach
+    public void init() {
+        id = 1L;
+    }
+
     // @author: hyechan, @since: 2022/04/30 3:40 오후
     @Test
     void 주소록_단건_조회_성공() throws Exception{
         //given
-        Long id = 1L;
         Address address = createEntity(createParam());
         given(addressService.getById(id)).willReturn(mapper.toDto(address));
         //when
-        ResultActions resultActions = mockMvc.perform(get("/address/{id}", id)
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/address/{id}", id)
                 .accept(MediaType.APPLICATION_JSON_VALUE));
         //then
         resultActions
