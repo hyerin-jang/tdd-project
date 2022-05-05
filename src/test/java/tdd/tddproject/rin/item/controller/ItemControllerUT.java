@@ -81,7 +81,7 @@ public class ItemControllerUT {
         given(itemService.findItemByItemName(any())).willReturn(itemDto);
 
         //when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/item/" + itemName));
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/item/{itemName}", itemName));
 
         //then
         resultActions
