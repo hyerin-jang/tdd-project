@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
@@ -53,7 +54,7 @@ public class AddressRepositoryUnitTest extends AddressConstructor {
         addressRepository.save(entity);
         //when
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("해당 주소가 존재하지 않습니다"));
+                .orElseThrow(() -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
         address.update(updateParam());
         //then
         Assertions.assertEquals(address.getAddressId(), id);

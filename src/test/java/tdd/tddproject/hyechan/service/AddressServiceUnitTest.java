@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.repository.AddressRepository;
@@ -59,7 +60,7 @@ class AddressServiceUnitTest extends AddressConstructor {
     void 주소록_단건_조회_실패() throws Exception{
         //given
         given(addressRepository.findById(failId))
-                .willThrow(new IdNotFoundException());
+                .willThrow(new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
 
         Assertions.assertThatThrownBy(()->
         //when

@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
@@ -79,7 +80,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
     void 주소록_단건_조회_실패() throws Exception{
 
         given(addressService.getById(failId))
-                .willThrow(new IdNotFoundException("NotFound"+failId));
+                .willThrow(new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/address/{id}", failId)
                 .accept(MediaType.APPLICATION_JSON_VALUE))

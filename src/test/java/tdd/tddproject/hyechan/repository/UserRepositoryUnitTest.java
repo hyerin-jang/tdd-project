@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.User;
+import tdd.tddproject.global.exception.ErrorCode;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
@@ -71,9 +73,10 @@ public class UserRepositoryUnitTest extends UserConstructor {
         //when
         userRepository.updateUser(user.getUserNo(),new UserParam(null,null,"수정이름",null,null));
         //then
-        Optional<User> byId = userRepository.findById(user.getUserNo());
-        assertEquals(byId.orElseThrow().getUserName(),"수정이름");
-        assertEquals(byId.orElseThrow().getUserEmail(),"dhgpcks@gmail.com");
+        User entity = userRepository.findById(user.getUserNo())
+                .orElseThrow(()->new IdNotFoundException(ErrorCode.USER_NOT_EXIST));
+        assertEquals(entity.getUserName(),"수정이름");
+        assertEquals(entity.getUserEmail(),"dhgpcks@gmail.com");
     }
 
     @Test

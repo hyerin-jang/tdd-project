@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.User;
+import tdd.tddproject.global.exception.ErrorCode;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.UserRepository;
@@ -58,7 +60,7 @@ public class UserService{
     @Transactional(readOnly = true)
     public UserDto findById(Long userNo) {
         User user = userRepository.findById(userNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+                .orElseThrow(() -> new IdNotFoundException(ErrorCode.USER_NOT_EXIST));
         return UserDto.builder()
                 .userNo(user.getUserNo())
                 .userName(user.getUserName())
@@ -79,7 +81,7 @@ public class UserService{
          */
         userRepository.updateUser(userNo, userParam);
         return mapper.toDto(userRepository.findById(userNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다.")));
+                .orElseThrow(() ->  new IdNotFoundException(ErrorCode.USER_NOT_EXIST)));
     }
 
     public void delete(Long userNo) {
