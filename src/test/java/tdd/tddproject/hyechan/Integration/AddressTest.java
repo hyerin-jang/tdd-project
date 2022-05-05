@@ -147,4 +147,21 @@ public class AddressTest extends AddressConstructor {
                         )
                 ));
     }
+
+
+    // @author: hyechan, @since: 2022/05/05 11:22 오전
+    @Test
+    void 주소록_추가_받는사람null_실패_() throws Exception{
+        //given
+        AddressParam param = createParam();
+        param.setAddressReceiver(null);
+        //when
+        ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.post("/address")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(param))
+                .accept(MediaType.APPLICATION_JSON_VALUE));
+        //then
+        resultActions.andExpect(status().isBadRequest());
+
+    }
 }

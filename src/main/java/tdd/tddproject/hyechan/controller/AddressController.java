@@ -2,9 +2,13 @@ package tdd.tddproject.hyechan.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.vo.user.AddressParam;
+
+import javax.validation.Valid;
 
 import static tdd.tddproject.global.util.Util.getMap;
 
@@ -27,7 +31,10 @@ public class AddressController {
     }
 
     @PostMapping("/address")
-    public ResponseEntity<?> add(@RequestBody AddressParam addressParam){
+    public ResponseEntity<?> add(@Valid @RequestBody AddressParam addressParam, BindingResult bindingResult) throws BindException {
+        if(bindingResult.hasErrors()){
+            throw new BindException(bindingResult);
+        }
         return ResponseEntity.ok()
                 .body(getMap(addressService.add(addressParam)));
     }
