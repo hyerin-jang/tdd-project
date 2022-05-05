@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
@@ -16,12 +17,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -79,7 +82,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
     void 주소록_단건_조회_실패() throws Exception{
 
         given(addressService.getById(failId))
-                .willThrow(new IdNotFoundException("NotFound"+failId));
+                .willThrow(new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/address/{id}", failId)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -128,18 +131,18 @@ public class AddressControllerUnitTest extends AddressConstructor {
     @Test
     void 주소록_업데이트() throws Exception{
         //given
-        AddressDto dto = mapper.toDto(createEntity(createParam()));
-        AddressParam updateParam = updateParam();
-        dto.setAddressPhone(updateParam.getAddressPhone());
-        dto.setAddressReceiver(updateParam.getAddressReceiver());
-        dto.setAddressStreet(updateParam.getAddressStreet());
+        AddressUpdateParam updateParam = new AddressUpdateParam();
+        updateParam.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        updateParam.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        updateParam.setAddressStreet(UPDATE_ADDRESS_STREET);
+
 
         willDoNothing().given(addressService).update(updateParam, id);
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(toJson(updateParam)))
+                .content(new ObjectMapper().writeValueAsString(updateParam)))
                 //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());

@@ -26,24 +26,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserParam {
-
     private String userId;
-
     private String userPw;
-
     private String userName;
-
     private String userEmail;
-
     private String userPhone;
-
-    public User toEntity(){
-        return User.builder()
-                .userId(userId)
-                .userName(userName)
-                .userEmail(userEmail)
-                .userPhone(userPhone)
-                .userPw(userPw).build();
-    }
 
 }

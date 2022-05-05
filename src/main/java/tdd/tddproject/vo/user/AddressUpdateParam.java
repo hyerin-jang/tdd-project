@@ -1,33 +1,17 @@
 package tdd.tddproject.vo.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import tdd.tddproject.domain.entity.user.Address;
-import tdd.tddproject.domain.entity.user.User;
 
-import javax.validation.constraints.NotNull;
-
-@Slf4j
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressParam {
-
-    @NotNull
+public class AddressUpdateParam {
     private String addressZip;
-
-    @NotNull
     private String addressCity;
-
-    @NotNull
     private String addressStreet;
-
-    @NotNull
     private String addressReceiver;
-
-    @NotNull
     private String addressPhone;
 }

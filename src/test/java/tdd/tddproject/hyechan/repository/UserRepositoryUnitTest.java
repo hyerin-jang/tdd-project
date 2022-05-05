@@ -3,15 +3,19 @@ package tdd.tddproject.hyechan.repository;
 
 // 단위 테스트 ( DB 관련 bean IoC에 등록되면 됨)
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.User;
+import tdd.tddproject.global.exception.ErrorCode;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -27,6 +31,13 @@ public class UserRepositoryUnitTest extends UserConstructor {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
+    @BeforeEach
+    public void init(){
+        entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
+    }
 
     @Test
     public void user_add_test() throws Exception{
@@ -71,9 +82,10 @@ public class UserRepositoryUnitTest extends UserConstructor {
         //when
         userRepository.updateUser(user.getUserNo(),new UserParam(null,null,"수정이름",null,null));
         //then
-        Optional<User> byId = userRepository.findById(user.getUserNo());
-        assertEquals(byId.orElseThrow().getUserName(),"수정이름");
-        assertEquals(byId.orElseThrow().getUserEmail(),"dhgpcks@gmail.com");
+        User entity = userRepository.findById(user.getUserNo())
+                .orElseThrow(()->new IdNotFoundException(ErrorCode.USER_NOT_EXIST));
+        assertEquals(entity.getUserName(),"수정이름");
+        assertEquals(entity.getUserEmail(),"dhgpcks@gmail.com");
     }
 
     @Test

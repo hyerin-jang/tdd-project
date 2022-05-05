@@ -8,11 +8,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +61,7 @@ class AddressServiceUnitTest extends AddressConstructor {
     void 주소록_단건_조회_실패() throws Exception{
         //given
         given(addressRepository.findById(failId))
-                .willThrow(new IdNotFoundException());
+                .willThrow(new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
 
         Assertions.assertThatThrownBy(()->
         //when
@@ -117,8 +119,12 @@ class AddressServiceUnitTest extends AddressConstructor {
         //given
         Address entity = createEntity(createParam());
         given(addressRepository.findById(id)).willReturn(Optional.ofNullable(entity));
+        AddressUpdateParam updateParam = new AddressUpdateParam();
+        updateParam.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        updateParam.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        updateParam.setAddressStreet(UPDATE_ADDRESS_STREET);
         //when
-        addressService.update(updateParam(), id);
+        addressService.update(updateParam, id);
         //then
         verify(addressRepository, times(1)).findById(id);
     }
