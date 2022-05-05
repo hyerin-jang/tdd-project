@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import javax.persistence.*;
 
@@ -24,8 +25,9 @@ import javax.persistence.*;
  */
 @Entity @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-//@DynamicUpdate
-//@DynamicInsert
+@DynamicUpdate
+//https://velog.io/@freddiey/JPA%EC%9D%98-DynamicUpdate
+@DynamicInsert
 //https://velog.io/@recordsbeat/DynamicUpdate%EA%B0%80-%EC%99%B8%EC%95%8A%EB%90%82%EB%8D%B0
 public class Address {
 
@@ -62,7 +64,7 @@ public class Address {
         this.addressPhone = addressPhone;
     }
 
-    public void update(AddressParam param){
+    public void update(AddressUpdateParam param){
         if (StringUtils.hasText(param.getAddressStreet())){
             this.addressStreet = param.getAddressStreet();
         }
@@ -78,8 +80,5 @@ public class Address {
         if (StringUtils.hasText(param.getAddressPhone())){
             this.addressPhone = param.getAddressPhone();
         }
-
-
-
     }
 }

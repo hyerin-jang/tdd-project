@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
@@ -23,6 +24,7 @@ import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -129,18 +131,18 @@ public class AddressControllerUnitTest extends AddressConstructor {
     @Test
     void 주소록_업데이트() throws Exception{
         //given
-        AddressDto dto = mapper.toDto(createEntity(createParam()));
-        AddressParam updateParam = updateParam();
-        dto.setAddressPhone(updateParam.getAddressPhone());
-        dto.setAddressReceiver(updateParam.getAddressReceiver());
-        dto.setAddressStreet(updateParam.getAddressStreet());
+        AddressUpdateParam updateParam = new AddressUpdateParam();
+        updateParam.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        updateParam.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        updateParam.setAddressStreet(UPDATE_ADDRESS_STREET);
+
 
         willDoNothing().given(addressService).update(updateParam, id);
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(toJson(updateParam)))
+                .content(new ObjectMapper().writeValueAsString(updateParam)))
                 //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());

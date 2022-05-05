@@ -14,6 +14,7 @@ import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,7 +50,7 @@ public class AddressService {
         return mapper.toDto(addressRepository.save(address));
     }
 
-    public void update(AddressParam updateParam, Long id) {
+    public void update(AddressUpdateParam updateParam, Long id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
         address.update(updateParam);

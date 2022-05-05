@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import javax.validation.Valid;
 
@@ -40,8 +41,8 @@ public class AddressController {
     }
 
     @PutMapping("/address/{id}")
-    public ResponseEntity<?> update(@RequestBody AddressParam addressParam, @PathVariable Long id){
-        addressService.update(addressParam, id);
+    public ResponseEntity<?> update(@RequestBody AddressUpdateParam updateParam, @PathVariable Long id){
+        addressService.update(updateParam, id);
         return ResponseEntity.ok().build();
     }
 }
