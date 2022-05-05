@@ -79,13 +79,7 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         }
         return arrayList;
     }
-    @Override
-    public UserParam updateParam() {
-        UserParam userParam = new UserParam();
-        userParam.setUserName("update");
-        userParam.setUserEmail("update@gmail.com");
-        return userParam;
-    }
+
     @Override
     public String toJson(UserParam param) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(param);

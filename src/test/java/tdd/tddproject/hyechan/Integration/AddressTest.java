@@ -1,5 +1,6 @@
 package tdd.tddproject.hyechan.Integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 
 import javax.persistence.EntityManager;
 
@@ -171,12 +173,15 @@ public class AddressTest extends AddressConstructor {
     void 주소록_업데이트() throws Exception{
         //given
         addressRepository.save(createEntity(createParam()));
-        AddressParam updateParam = updateParam();
+        AddressUpdateParam param = new AddressUpdateParam();
+        param.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        param.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        param.setAddressStreet(UPDATE_ADDRESS_STREET);
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(toJson(updateParam)))
+                .content(new ObjectMapper().writeValueAsString(param)))
         //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());

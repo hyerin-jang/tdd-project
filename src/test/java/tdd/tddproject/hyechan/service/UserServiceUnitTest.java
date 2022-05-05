@@ -89,7 +89,10 @@ public class UserServiceUnitTest extends UserConstructor {
         //given
         Long userNo = 1L;
         User user = createEntity(createParam());
-        UserParam updateParam = updateParam();
+
+        UserParam updateParam = new UserParam();
+        updateParam.setUserName("update");
+        updateParam.setUserEmail("update@gmail.com");
 
         user.update(updateParam.getUserName(),updateParam.getUserEmail(),updateParam.getUserPhone());
         // querydsl, repository QUERY 생성하는 거여서 사용할 수 없음. 일단 update 메서드 사용.
@@ -97,7 +100,7 @@ public class UserServiceUnitTest extends UserConstructor {
         doNothing().when(userRepository).updateUser(userNo, updateParam);
         when(userRepository.findById(userNo)).thenReturn(Optional.of(user));
         //when
-        userService.update(userNo, updateParam());
+        userService.update(userNo, updateParam);
         //then
         verify(userRepository, times(1)).updateUser(userNo, updateParam);
     }

@@ -75,14 +75,6 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
         return arrayList;
     }
 
-    @Override
-    public AddressParam updateParam() {
-        AddressParam param = new AddressParam();
-        param.setAddressPhone(UPDATE_ADDRESS_PHONE);
-        param.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
-        param.setAddressStreet(UPDATE_ADDRESS_STREET);
-        return param;
-    }
 
     @Override
     public String toJson(AddressParam param) throws JsonProcessingException {

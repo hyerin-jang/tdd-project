@@ -3,6 +3,7 @@ package tdd.tddproject.hyechan.repository;
 
 // 단위 테스트 ( DB 관련 bean IoC에 등록되면 됨)
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -14,6 +15,7 @@ import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +31,13 @@ public class UserRepositoryUnitTest extends UserConstructor {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EntityManager entityManager;
+
+    @BeforeEach
+    public void init(){
+        entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
+    }
 
     @Test
     public void user_add_test() throws Exception{
