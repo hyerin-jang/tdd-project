@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import tdd.tddproject.vo.user.AddressParam;
 
 import javax.persistence.*;
 
@@ -21,8 +24,9 @@ import javax.persistence.*;
  */
 @Entity @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
-@DynamicUpdate
-@DynamicInsert
+//@DynamicUpdate
+//@DynamicInsert
+//https://velog.io/@recordsbeat/DynamicUpdate%EA%B0%80-%EC%99%B8%EC%95%8A%EB%90%82%EB%8D%B0
 public class Address {
 
     @Id @Column(name = "ADDRESS_ID")
@@ -56,5 +60,26 @@ public class Address {
         this.addressStreet = addressStreet;
         this.addressReceiver = addressReceiver;
         this.addressPhone = addressPhone;
+    }
+
+    public void update(AddressParam param){
+        if (StringUtils.hasText(param.getAddressStreet())){
+            this.addressStreet = param.getAddressStreet();
+        }
+        if (StringUtils.hasText(param.getAddressZip())){
+            this.addressZip = param.getAddressZip();
+        }
+        if (StringUtils.hasText(param.getAddressCity())){
+            this.addressCity = param.getAddressCity();
+        }
+        if (StringUtils.hasText(param.getAddressReceiver())){
+            this.addressReceiver = param.getAddressReceiver();
+        }
+        if (StringUtils.hasText(param.getAddressPhone())){
+            this.addressPhone = param.getAddressPhone();
+        }
+
+
+
     }
 }

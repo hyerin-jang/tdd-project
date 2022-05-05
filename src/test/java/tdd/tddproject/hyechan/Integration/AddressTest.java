@@ -161,7 +161,24 @@ public class AddressTest extends AddressConstructor {
                 .content(toJson(param))
                 .accept(MediaType.APPLICATION_JSON_VALUE));
         //then
-        resultActions.andExpect(status().isBadRequest());
+        resultActions.andExpect(status().isBadRequest())
+                    .andDo(MockMvcResultHandlers.print());
+    }
 
+
+    // @author: hyechan, @since: 2022/05/05 11:34 오전
+    @Test
+    void 주소록_업데이트() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        AddressParam updateParam = updateParam();
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(updateParam)))
+        //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
 }

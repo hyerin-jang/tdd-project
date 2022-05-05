@@ -14,7 +14,10 @@ import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.vo.user.AddressParam;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(rollbackFor = {Exception.class}, propagation = Propagation.REQUIRED)
@@ -24,6 +27,8 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
 
+    @PersistenceContext
+    EntityManager em;
 
     public AddressDto getById(Long id){
 
@@ -40,5 +45,11 @@ public class AddressService {
     public AddressDto add(AddressParam addressParam) {
         Address address = mapper.toEntity(addressParam);
         return mapper.toDto(addressRepository.save(address));
+    }
+
+    public void update(AddressParam updateParam, Long id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("해당 주소가 존재하지 않습니다"));
+        address.update(updateParam);
     }
 }

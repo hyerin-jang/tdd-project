@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
 
@@ -41,6 +42,26 @@ public class AddressRepositoryUnitTest extends AddressConstructor {
         Assertions.assertEquals(address.getAddressStreet(), ADDRESS_STREET);
         Assertions.assertEquals(address.getAddressReceiver(), ADDRESS_RECEIVER);
         Assertions.assertEquals(address.getAddressPhone(), ADDRESS_PHONE);
+    }
+
+
+    // @author: hyechan, @since: 2022/05/05 12:17 오후 // ? 검증
+    @Test
+    void 주소록_업데이트() throws Exception{
+        //given
+        Address entity = createEntity(createParam());
+        addressRepository.save(entity);
+        //when
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("해당 주소가 존재하지 않습니다"));
+        address.update(updateParam());
+        //then
+        Assertions.assertEquals(address.getAddressId(), id);
+        Assertions.assertEquals(address.getAddressZip(), ADDRESS_ZIP);
+        Assertions.assertEquals(address.getAddressCity(), ADDRESS_CITY);
+        Assertions.assertEquals(address.getAddressStreet(), UPDATE_ADDRESS_STREET);
+        Assertions.assertEquals(address.getAddressReceiver(), UPDATE_ADDRESS_RECEIVER);
+        Assertions.assertEquals(address.getAddressPhone(), UPDATE_ADDRESS_PHONE);
     }
 
 }

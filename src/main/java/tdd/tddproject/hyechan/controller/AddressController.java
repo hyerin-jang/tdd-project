@@ -38,4 +38,10 @@ public class AddressController {
         return ResponseEntity.ok()
                 .body(getMap(addressService.add(addressParam)));
     }
+
+    @PutMapping("/address/{id}")
+    public ResponseEntity<?> update(@RequestBody AddressParam addressParam, @PathVariable Long id){
+        addressService.update(addressParam, id);
+        return ResponseEntity.ok().build();
+    }
 }

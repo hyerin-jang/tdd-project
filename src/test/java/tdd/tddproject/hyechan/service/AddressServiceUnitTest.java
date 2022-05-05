@@ -23,6 +23,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class) // springboot x, Mockito 따로 띄움
 class AddressServiceUnitTest extends AddressConstructor {
@@ -106,6 +108,18 @@ class AddressServiceUnitTest extends AddressConstructor {
         assertThat(dto.getAddressZip()).isEqualTo(ADDRESS_ZIP);
         assertThat(dto.getAddressStreet()).isEqualTo(ADDRESS_STREET);
         assertThat(dto.getAddressReceiver()).isEqualTo(ADDRESS_RECEIVER);
+    }
 
+
+    // @author: hyechan, @since: 2022/05/05 11:51 오전
+    @Test
+    void 주소록_업데이트() throws Exception{
+        //given
+        Address entity = createEntity(createParam());
+        given(addressRepository.findById(id)).willReturn(Optional.ofNullable(entity));
+        //when
+        addressService.update(updateParam(), id);
+        //then
+        verify(addressRepository, times(1)).findById(id);
     }
 }

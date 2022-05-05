@@ -124,4 +124,24 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .andExpect(jsonPath("$.result.addressZip").value(ADDRESS_ZIP))
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    void 주소록_업데이트() throws Exception{
+        //given
+        AddressDto dto = mapper.toDto(createEntity(createParam()));
+        AddressParam updateParam = updateParam();
+        dto.setAddressPhone(updateParam.getAddressPhone());
+        dto.setAddressReceiver(updateParam.getAddressReceiver());
+        dto.setAddressStreet(updateParam.getAddressStreet());
+
+        willDoNothing().given(addressService).update(updateParam, id);
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(updateParam)))
+                //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
 }
