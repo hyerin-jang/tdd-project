@@ -3,14 +3,20 @@ package tdd.tddproject.hyechan.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.platform.commons.util.StringUtils;
+import org.mapstruct.factory.Mappers;
 import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.hyechan.mapper.AddressMapper;
+import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.AddressUpdateParam;
 import tdd.tddproject.vo.user.UserParam;
 
 import java.util.ArrayList;
 
 public class AddressConstructor implements ConstructorCreate<Address, AddressParam>{
+
+    AddressMapper mapper = Mappers.getMapper(AddressMapper.class);
 
     protected String ADDRESS_ZIP = "000000";
     protected String ADDRESS_CITY = "경상북도";
@@ -24,7 +30,7 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
 
     @Override
     public Address createEntity(AddressParam param) {
-        Address address = param.toEntity();
+        Address address = mapper.toEntity(param);
         ReflectionTestUtils.setField(address, "addressId", 1L);
         return address;
     }
@@ -33,7 +39,7 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
     public ArrayList<Address> createEntity(ArrayList<AddressParam> paramList) {
         ArrayList<Address> arrayList = new ArrayList<>();
         for (AddressParam param : paramList) {
-            arrayList.add(param.toEntity());
+            arrayList.add(mapper.toEntity(param));
         }
         return arrayList;
     }
@@ -77,6 +83,7 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
         param.setAddressStreet(UPDATE_ADDRESS_STREET);
         return param;
     }
+
     @Override
     public String toJson(AddressParam param) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(param);

@@ -14,22 +14,13 @@ import lombok.Data;
  * 2022/04/11 1:36 오후  hyechan        최초 생성
  */
 @Data
+@Builder
 public class UserDto {
+
     private Long userNo;
     private String userId;
     private String userName;
     private String userEmail;
     private String userPhone;
     private String userYn;
-
-    @Builder
-    public UserDto(Long userNo, String userId, String userName, String userEmail, String userPhone, String userYn){
-        this.userNo = userNo;
-        this.userId = userId;
-        this.userName = userName;
-        this.userEmail = userEmail;
-        this.userPhone = userPhone;
-        this.userYn = userYn;
-    }
-
 }

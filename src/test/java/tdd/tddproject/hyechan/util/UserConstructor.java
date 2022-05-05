@@ -26,7 +26,7 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
 
     @Override
     public User createEntity(UserParam param){
-        User user = param.toEntity();
+        User user = mapper.toEntity(param);
         ReflectionTestUtils.setField(user, "userNo", 1L);
         return user;
     }
@@ -35,7 +35,7 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
     public ArrayList<User> createEntity(ArrayList<UserParam> paramList) {
         ArrayList<User> arrayList = new ArrayList<>();
         for (UserParam param : paramList) {
-            User user = param.toEntity();
+            User user = mapper.toEntity(param);
             arrayList.add(user);
         }
         return arrayList;
@@ -46,7 +46,7 @@ public class UserConstructor implements ConstructorCreate<User, UserParam> {
         ArrayList<User> arrayList = new ArrayList<>();
         Long index = 0L;
         for (UserParam param : paramList) {
-            User user = param.toEntity();
+            User user = mapper.toEntity(param);
             ReflectionTestUtils.setField(user, id, index);
             arrayList.add(user);
             index++;

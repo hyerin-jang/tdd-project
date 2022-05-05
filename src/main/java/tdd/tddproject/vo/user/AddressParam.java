@@ -30,14 +30,4 @@ public class AddressParam {
 
     @NotNull
     private String addressPhone;
-
-    public Address toEntity(){
-        return Address.builder()
-                .addressZip(addressZip)
-                .addressCity(addressCity)
-                .addressStreet(addressStreet)
-                .addressReceiver(addressReceiver)
-                .addressPhone(addressPhone).build();
-    }
-
 }
