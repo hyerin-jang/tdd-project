@@ -2,9 +2,11 @@ package tdd.tddproject.hyechan.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.vo.user.AddressParam;
+import tdd.tddproject.vo.user.UserParam;
 
 import java.util.ArrayList;
 
@@ -15,6 +17,10 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
     protected String ADDRESS_STREET = "진평동 에이파크 501호";
     protected String ADDRESS_RECEIVER = "test";
     protected String ADDRESS_PHONE = "010-0000-0000";
+
+    protected String UPDATE_ADDRESS_PHONE = "999-9999-9999";
+    protected String UPDATE_ADDRESS_RECEIVER = "update";
+    protected String UPDATE_ADDRESS_STREET = "업데이트 501호";
 
     @Override
     public Address createEntity(AddressParam param) {
@@ -50,12 +56,26 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
 
     @Override
     public ArrayList<AddressParam> createParam(int count) {
-        return null;
+        ArrayList<AddressParam> arrayList = new ArrayList<>();
+        for(int i = 0; i < count; i ++){
+            AddressParam param = new AddressParam();
+            param.setAddressCity(ADDRESS_CITY+i);
+            param.setAddressReceiver(ADDRESS_RECEIVER+i);
+            param.setAddressPhone(ADDRESS_PHONE.substring(0, ADDRESS_PHONE.length() -1)+i);
+            param.setAddressStreet(ADDRESS_STREET+i);
+            param.setAddressZip(ADDRESS_ZIP.substring(0,ADDRESS_ZIP.length() -1)+i);
+            arrayList.add(param);
+        }
+        return arrayList;
     }
 
     @Override
     public AddressParam updateParam() {
-        return null;
+        AddressParam param = new AddressParam();
+        param.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        param.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        param.setAddressStreet(UPDATE_ADDRESS_STREET);
+        return param;
     }
     @Override
     public String toJson(AddressParam param) throws JsonProcessingException {
