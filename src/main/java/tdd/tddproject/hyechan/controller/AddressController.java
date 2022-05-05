@@ -2,10 +2,9 @@ package tdd.tddproject.hyechan.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tdd.tddproject.hyechan.service.AddressService;
+import tdd.tddproject.vo.user.AddressParam;
 
 import static tdd.tddproject.global.util.Util.getMap;
 
@@ -25,5 +24,11 @@ public class AddressController {
     public ResponseEntity<?> getList(){
         return ResponseEntity.ok()
                 .body(getMap(addressService.getList()));
+    }
+
+    @PostMapping("/address")
+    public ResponseEntity<?> add(@RequestBody AddressParam addressParam){
+        return ResponseEntity.ok()
+                .body(getMap(addressService.add(addressParam)));
     }
 }

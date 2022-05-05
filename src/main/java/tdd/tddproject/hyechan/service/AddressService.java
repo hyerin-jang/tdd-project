@@ -12,6 +12,7 @@ import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.mapper.UserMapper;
 import tdd.tddproject.hyechan.repository.AddressRepository;
+import tdd.tddproject.vo.user.AddressParam;
 
 import java.util.List;
 
@@ -34,5 +35,10 @@ public class AddressService {
     public List<AddressDto> getList() {
         List<Address> list = addressRepository.findAll();
         return mapper.toDtoList(list);
+    }
+
+    public AddressDto add(AddressParam addressParam) {
+        Address address = mapper.toEntity(addressParam);
+        return mapper.toDto(addressRepository.save(address));
     }
 }

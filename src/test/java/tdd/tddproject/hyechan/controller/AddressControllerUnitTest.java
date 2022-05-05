@@ -21,6 +21,7 @@ import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.mapper.AddressMapper;
 import tdd.tddproject.hyechan.service.AddressService;
 import tdd.tddproject.hyechan.util.AddressConstructor;
+import tdd.tddproject.vo.user.AddressParam;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -100,5 +101,27 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .andExpect(jsonPath("$.result.[0].addressCity").value(ADDRESS_CITY+0))
                 .andExpect(jsonPath("$.result.[1].addressReceiver").value(ADDRESS_RECEIVER+1))
                 .andExpect(jsonPath("$.result.[2].addressPhone").value(ADDRESS_PHONE.substring(0,ADDRESS_PHONE.length() -1)+2));
+    }
+
+
+    @Test
+    void 주소록_추가() throws Exception{
+        //given
+        AddressParam param = createParam();
+        AddressDto dto = mapper.toDto(createEntity(param));
+        given(addressService.add(param)).willReturn(dto);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.post("/address")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(param))
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.addressPhone").value(ADDRESS_PHONE))
+                .andExpect(jsonPath("$.result.addressCity").value(ADDRESS_CITY))
+                .andExpect(jsonPath("$.result.addressStreet").value(ADDRESS_STREET))
+                .andExpect(jsonPath("$.result.addressReceiver").value(ADDRESS_RECEIVER))
+                .andExpect(jsonPath("$.result.addressZip").value(ADDRESS_ZIP))
+                .andDo(MockMvcResultHandlers.print());
     }
 }

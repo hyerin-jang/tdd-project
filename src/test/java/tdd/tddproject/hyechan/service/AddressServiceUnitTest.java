@@ -12,6 +12,7 @@ import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
+import tdd.tddproject.vo.user.AddressParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
@@ -86,5 +88,24 @@ class AddressServiceUnitTest extends AddressConstructor {
                 .contains(tuple("010-0000-0000","000000"))
                 .contains(tuple("010-0000-0001","000001"))
                 .contains(tuple("010-0000-0002","000002"));
+    }
+
+
+    // @author: hyechan, @since: 2022/05/05 10:46 오전
+    @Test
+    void 리스트_추가() throws Exception{
+        //given
+        AddressParam param = createParam();
+        Address entity = createEntity(param);
+        given(addressRepository.save(any())).willReturn(entity);
+        //when
+        AddressDto dto = addressService.add(param);
+        //then
+        assertThat(dto.getAddressCity()).isEqualTo(ADDRESS_CITY);
+        assertThat(dto.getAddressPhone()).isEqualTo(ADDRESS_PHONE);
+        assertThat(dto.getAddressZip()).isEqualTo(ADDRESS_ZIP);
+        assertThat(dto.getAddressStreet()).isEqualTo(ADDRESS_STREET);
+        assertThat(dto.getAddressReceiver()).isEqualTo(ADDRESS_RECEIVER);
+
     }
 }

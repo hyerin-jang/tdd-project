@@ -18,6 +18,10 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
     protected String ADDRESS_RECEIVER = "test";
     protected String ADDRESS_PHONE = "010-0000-0000";
 
+    protected String UPDATE_ADDRESS_PHONE = "999-9999-9999";
+    protected String UPDATE_ADDRESS_RECEIVER = "update";
+    protected String UPDATE_ADDRESS_STREET = "업데이트 501호";
+
     @Override
     public Address createEntity(AddressParam param) {
         Address address = param.toEntity();
@@ -67,7 +71,11 @@ public class AddressConstructor implements ConstructorCreate<Address, AddressPar
 
     @Override
     public AddressParam updateParam() {
-        return null;
+        AddressParam param = new AddressParam();
+        param.setAddressPhone(UPDATE_ADDRESS_PHONE);
+        param.setAddressReceiver(UPDATE_ADDRESS_RECEIVER);
+        param.setAddressStreet(UPDATE_ADDRESS_STREET);
+        return param;
     }
     @Override
     public String toJson(AddressParam param) throws JsonProcessingException {

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.Address;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
+import tdd.tddproject.vo.user.AddressParam;
 
 import javax.persistence.EntityManager;
 
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -108,8 +112,39 @@ public class AddressTest extends AddressConstructor {
         //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result", Matchers.hasSize(3)))
-                .andExpect(jsonPath("$.result.[1].addressCity").value(ADDRESS_CITY+1))
-                .andExpect(jsonPath("$.result.[2].addressReceiver").value(ADDRESS_RECEIVER+2))
-                .andExpect(jsonPath("$.result.[3].addressPhone").value(ADDRESS_PHONE.substring(0,ADDRESS_PHONE.length() -1)+3));
+                .andExpect(jsonPath("$.result.[0].addressCity").value(ADDRESS_CITY+0))
+                .andExpect(jsonPath("$.result.[1].addressReceiver").value(ADDRESS_RECEIVER+1))
+                .andExpect(jsonPath("$.result.[2].addressPhone").value(ADDRESS_PHONE.substring(0,ADDRESS_PHONE.length() -1)+2))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
+    // @author: hyechan, @since: 2022/05/05 10:41 오전
+    @Test
+    void 주소록_추가() throws Exception{
+        //given
+        AddressParam param = createParam();
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/address")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(param))
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.addressPhone").value(ADDRESS_PHONE))
+                .andExpect(jsonPath("$.result.addressCity").value(ADDRESS_CITY))
+                .andExpect(jsonPath("$.result.addressStreet").value(ADDRESS_STREET))
+                .andExpect(jsonPath("$.result.addressReceiver").value(ADDRESS_RECEIVER))
+                .andExpect(jsonPath("$.result.addressZip").value(ADDRESS_ZIP))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(document("address/address_add",
+                        requestFields(
+                            fieldWithPath("addressPhone").type(JsonFieldType.STRING).description("폰번호"),
+                            fieldWithPath("addressCity").type(JsonFieldType.STRING).description("시군구"),
+                            fieldWithPath("addressStreet").type(JsonFieldType.STRING).description("도로명"),
+                            fieldWithPath("addressReceiver").type(JsonFieldType.STRING).description("받는사람"),
+                            fieldWithPath("addressZip").type(JsonFieldType.STRING).description("우편번호")
+                        )
+                ));
     }
 }
