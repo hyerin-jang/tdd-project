@@ -127,6 +127,23 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .andExpect(jsonPath("$.result.addressZip").value(ADDRESS_ZIP))
                 .andDo(MockMvcResultHandlers.print());
     }
+    
+    
+    // @author: hyechan, @since: 2022/05/12 2:42 오후
+    @Test
+    void 주소록_추가_실패_beanValidation() throws Exception{
+        //given
+        AddressParam param = createParam();
+        param.setAddressReceiver(null);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.post("/address")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(toJson(param))
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print());
+    }
 
     @Test
     void 주소록_업데이트() throws Exception{
