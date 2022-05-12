@@ -199,6 +199,25 @@ public class AddressTest extends AddressConstructor {
         //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
+    }
 
+
+    // @author: hyechan, @since: 2022/05/12 3:14 오후
+    // 이 테스트 코드를 짜면서 Service 에 () -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST) 생김
+    @Test
+    void 주소록_삭제_중복요청_실패_IdNotFoundException() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                //then
+                .andExpect(status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
     }
 }

@@ -175,6 +175,5 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
-
     }
 }
