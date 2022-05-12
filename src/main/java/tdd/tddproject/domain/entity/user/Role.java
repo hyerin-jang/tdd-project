@@ -21,7 +21,6 @@ import java.util.List;
  * 2022/03/26 4:47 오후  hyechan        최초 생성
  */
 @Entity @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @DynamicUpdate
 @DynamicInsert
 public class Role {
@@ -39,4 +38,7 @@ public class Role {
     @OneToMany(mappedBy="role")
     private List<User> userList = new ArrayList<>();
 
+    public Role(RoleType roleType){
+        this.roleName = roleType;
+    }
 }
