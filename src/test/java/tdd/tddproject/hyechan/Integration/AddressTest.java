@@ -186,4 +186,19 @@ public class AddressTest extends AddressConstructor {
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
+
+
+    // @author: hyechan, @since: 2022/05/12 2:55 오후
+    @Test
+    void 주소록_삭제() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+
+    }
 }

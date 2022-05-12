@@ -164,4 +164,17 @@ public class AddressControllerUnitTest extends AddressConstructor {
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    void 주소록_삭제() throws Exception{
+        //given
+        willDoNothing().given(addressService).delete(id);
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+
+    }
 }

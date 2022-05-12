@@ -55,4 +55,10 @@ public class AddressService {
                 .orElseThrow(() -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
         address.update(updateParam);
     }
+
+    public void delete(Long id) {
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST));
+        addressRepository.delete(address);
+    }
 }
