@@ -153,7 +153,7 @@ public class AddressTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/05 11:22 오전
     @Test
-    void 주소록_추가_받는사람null_실패_() throws Exception{
+    void 주소록_추가_받는사람_실패_beanValidation() throws Exception{
         //given
         AddressParam param = createParam();
         param.setAddressReceiver(null);
