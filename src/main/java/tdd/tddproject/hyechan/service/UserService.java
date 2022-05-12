@@ -7,15 +7,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tdd.tddproject.domain.entity.user.Role;
+import tdd.tddproject.domain.entity.user.RoleType;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.mapper.UserMapper;
+import tdd.tddproject.hyechan.repository.RoleRepository;
 import tdd.tddproject.hyechan.repository.UserRepository;
 import tdd.tddproject.vo.user.UserParam;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * fileName    : UserServiceImpl
@@ -33,6 +37,7 @@ import java.util.List;
 public class UserService{
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 //    private final UserParamMapper paramMapper = Mappers.getMapper(UserParamMapper.class);
@@ -47,6 +52,9 @@ public class UserService{
                 .userPhone(userParam.getUserPhone())
                 .userPw(bCryptPasswordEncoder.encode(userParam.getUserPw()))
                 .build();
+        Role role = roleRepository.findByRoleName(RoleType.ROLE_USER)
+                .orElseThrow(() -> new IdNotFoundException(ErrorCode.ROLE_NOT_EXIST));
+        user.setRole(role);
         return userRepository.save(user).getUserNo();
     }
 
