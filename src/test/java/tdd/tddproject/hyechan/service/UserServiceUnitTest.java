@@ -3,6 +3,7 @@ package tdd.tddproject.hyechan.service;
 // 단위 테스트 ( Service 관련된 애들만 메모리에 띄움)
 // BoardRepository 가짜 객체로  - Mock
 //docall메서드
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -12,8 +13,11 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
+import tdd.tddproject.domain.entity.user.Role;
+import tdd.tddproject.domain.entity.user.RoleType;
 import tdd.tddproject.domain.entity.user.User;
 import tdd.tddproject.hyechan.dto.UserDto;
+import tdd.tddproject.hyechan.repository.RoleRepository;
 import tdd.tddproject.hyechan.repository.UserRepository;
 import tdd.tddproject.hyechan.util.UserConstructor;
 import tdd.tddproject.vo.user.UserParam;
@@ -39,6 +43,9 @@ public class UserServiceUnitTest extends UserConstructor {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private RoleRepository roleRepository;
+
     @Spy
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     // Mock 을 사용하면 실질적인 instance 가 아닌 가짜 객체를 생성하는 반면에 Spy 는 실질질적으로 존재하는 instance 를 wraping 한 객체를 생성
@@ -51,6 +58,7 @@ public class UserServiceUnitTest extends UserConstructor {
 //        when(userRepository.save(user)).thenReturn(user);
 //        실 UserService 에서 들어가는 엔티티 user, createEntity() !=equals
         when(userRepository.save(any())).thenReturn(user);
+        when(roleRepository.findByRoleName(RoleType.ROLE_USER)).thenReturn(Optional.of(new Role(RoleType.ROLE_USER)));
         //when test execute
         Long add = userService.add(param);
         //then

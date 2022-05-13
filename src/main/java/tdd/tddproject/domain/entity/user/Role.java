@@ -23,10 +23,17 @@ import java.util.List;
 @Entity @Getter
 @DynamicUpdate
 @DynamicInsert
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@SequenceGenerator(
+        name = "ROLE_SEQ_GENERATOR",
+        sequenceName = "ROLE_SEQ", // 시퀸스 명
+        initialValue = 1, // 초기 값
+        allocationSize = 1 // 미리 할당 받을 시퀸스 수
+)
 public class Role {
 
     @Id @Column(name = "ROLE_NO")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLE_SEQ_GENERATOR")
     private Long roleNo;
 
     @Column(name = "ROLE_NAME")
@@ -41,4 +48,6 @@ public class Role {
     public Role(RoleType roleType){
         this.roleName = roleType;
     }
+
+
 }

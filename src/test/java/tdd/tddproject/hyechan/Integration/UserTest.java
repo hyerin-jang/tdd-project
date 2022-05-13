@@ -17,12 +17,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
+import tdd.tddproject.domain.entity.user.Role;
+import tdd.tddproject.domain.entity.user.RoleType;
 import tdd.tddproject.domain.entity.user.User;
+import tdd.tddproject.global.WithAdmin;
+import tdd.tddproject.global.WithUser;
+import tdd.tddproject.global.exception.ErrorCode;
+import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.mapper.UserMapper;
+import tdd.tddproject.hyechan.repository.RoleRepository;
 import tdd.tddproject.hyechan.repository.UserRepository;
 import tdd.tddproject.hyechan.service.UserService;
 import tdd.tddproject.hyechan.util.UserConstructor;
@@ -31,11 +40,15 @@ import tdd.tddproject.vo.user.UserParam;
 import javax.persistence.EntityManager;
 
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -65,6 +78,9 @@ class UserTest extends UserConstructor {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
 
     UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
@@ -72,9 +88,16 @@ class UserTest extends UserConstructor {
     private EntityManager entityManager;
     private JPAQueryFactory jpaQueryFactory;
 
+    Role roleUser;
+
     @BeforeEach
     public void init() {
         entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
+        //카테고리 값 넣어주기
+        roleRepository.save(new Role(RoleType.ROLE_ADMIN));
+        roleRepository.save(new Role(RoleType.ROLE_USER));
+        roleRepository.save(new Role(RoleType.ROLE_SELLER));
+        roleUser = roleRepository.findByRoleName(RoleType.ROLE_USER).orElseThrow(() -> new IdNotFoundException(ErrorCode.ROLE_NOT_EXIST));
     }
 
     @AfterEach
@@ -92,12 +115,12 @@ class UserTest extends UserConstructor {
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.post("/user")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(content)
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE));
 
         // == then(검증)
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result").value("1"))
                 .andDo(MockMvcResultHandlers.print())
                 .andDo(document("user/user_add",
                         requestFields(
@@ -111,10 +134,14 @@ class UserTest extends UserConstructor {
     }
 
     @Test
+    @WithAdmin
     public void user_getList_iTest() throws Exception{
         //given
-        userRepository.saveAll(createEntity(createParam(2)));
-
+        ArrayList<User> entityList = createEntity(createParam(2));
+        for (User entity : entityList) {
+            entity.setRole(roleUser);
+        }
+        userRepository.saveAll(entityList);
         ResultActions resultActions = mockMvc.perform(get(("/user"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
         //then
@@ -130,10 +157,32 @@ class UserTest extends UserConstructor {
     }
 
     @Test
+    @WithUser
+    public void user_getList_권한으로인한_실패() throws Exception{
+        //given
+        ArrayList<User> entityList = createEntity(createParam(2));
+        for (User entity : entityList) {
+            entity.setRole(roleUser);
+        }
+        userRepository.saveAll(entityList);
+        ResultActions resultActions = mockMvc.perform(get(("/user"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        //then
+        resultActions
+                .andExpect(status().isForbidden());
+    }
+
+
+    @Test
+    @WithUser
     public void user_get_iTest() throws Exception{
         // given
         Long userNo = 1L;
-        userRepository.saveAll(createEntity(createParam(2)));
+        ArrayList<User> entityList = createEntity(createParam(2));
+        for (User entity : entityList) {
+            entity.setRole(roleUser);
+        }
+        userRepository.saveAll(entityList);
         // when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/user/{userNo}", userNo)
                 .accept(MediaType.APPLICATION_JSON_VALUE));
@@ -150,27 +199,30 @@ class UserTest extends UserConstructor {
     }
 
     @Test
+    @WithUser
     public void user_update_iTest() throws Exception{
         //given
         Long userNo = 1L;
-        userRepository.saveAll(createEntity(createParam(2)));
+        User entity = createEntity(createParam());
+        entity.setRole(roleUser);
+        userRepository.save(entity);
 
         UserParam updateParam = new UserParam();
         updateParam.setUserName("dhgpcks");
         updateParam.setUserPhone("010-3333-3333");
-        String content = toJson(updateParam);
         //when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.put("/user/{userNo}", userNo)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(content)
+                .content(toJson(updateParam))
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE));
 
         //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.userId").value("test0"))
+                .andExpect(jsonPath("$.result.userId").value("test"))
                 .andExpect(jsonPath("$.result.userName").value("dhgpcks"))
-                .andExpect(jsonPath("$.result.userEmail").value("0@gmail.com"))
+                .andExpect(jsonPath("$.result.userEmail").value("dhgpcks@gmail.com"))
                 .andExpect(jsonPath("$.result.userPhone").value("010-3333-3333"))
                 .andDo(document("user/user_update",
                         pathParameters(parameterWithName("userNo").description("user 번호")),
@@ -185,14 +237,20 @@ class UserTest extends UserConstructor {
     }
 
     @Test
+    @WithUser
     public void user_delete_iTest_doNothing() throws Exception{
         //given
         Long userNo = 1L;
-        userRepository.saveAll(createEntity(createParam(2)));
+        ArrayList<User> entityList = createEntity(createParam(2));
+        for (User entity : entityList) {
+            entity.setRole(roleUser);
+        }
+        userRepository.saveAll(entityList);
         //when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.delete("/user/{userNo}", userNo)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf())
         );
         //then
         assertEquals(userRepository.findAll().size(), 1);
