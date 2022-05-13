@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().ignoringAntMatchers("/h2-console/**").disable();
+        http.csrf().ignoringAntMatchers("/h2-console/**");
         http.cors().disable();
         http.authorizeRequests()
                 //주소록 관련 요청은 인증 필요
