@@ -44,19 +44,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().permitAll()
-                .and()
+            .and()
                 .formLogin()
-//                .loginPage("/home/loginForm")
-                .loginProcessingUrl("/login");
-//                .usernameParameter("userId").passwordParameter("userPw")
-//                .defaultSuccessUrl("/");
-//                    .defaultSuccessUrl("/home/main")  //로그인 성공시 기본 리다이렉트 주소
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/") //로그아웃 성공시 리다이렉트 주소
-//                    .logoutSuccessHandler(customLogoutSuccessHandler)
-//                .invalidateHttpSession(true);//세션 날리기
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/")
+//                .failureUrl("/login?error"); default 값
+            .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true);//세션 날리기
         // frame, iframe, embed, object 태그 페이지 랜더링 허용 여부
         // -> embedded h2 사용하기 위해 disable
         http.headers()
