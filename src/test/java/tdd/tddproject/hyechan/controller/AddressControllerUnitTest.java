@@ -10,13 +10,23 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithSecurityContext;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import tdd.tddproject.config.SecurityConfig;
+import tdd.tddproject.config.auth.PrincipalDetail;
+import tdd.tddproject.config.auth.PrincipalDetailService;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.WithUser;
 import tdd.tddproject.global.exception.ErrorCode;
 import tdd.tddproject.global.exception.IdNotFoundException;
 import tdd.tddproject.hyechan.dto.AddressDto;
@@ -32,10 +42,19 @@ import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AddressController.class)
+@WebMvcTest(
+        controllers = AddressController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        classes = SecurityConfig.class
+                )
+        }
+)
 public class AddressControllerUnitTest extends AddressConstructor {
 
     @Autowired
@@ -57,6 +76,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/04/30 3:40 오후
     @Test
+    @WithUser
     void 주소록_단건_조회_성공() throws Exception{
         //given
         Address address = createEntity(createParam());
@@ -79,6 +99,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/04 9:15 오후
     @Test
+    @WithUser
     void 주소록_단건_조회_실패() throws Exception{
 
         given(addressService.getById(failId))
@@ -91,6 +112,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
     }
 
     @Test
+    @WithUser
     void 주소록_리스트_조회() throws Exception{
         //given
         ArrayList<Address> list = createEntity(createParam(3));
@@ -108,6 +130,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
 
 
     @Test
+    @WithUser
     void 주소록_추가() throws Exception{
         //given
         AddressParam param = createParam();
@@ -116,6 +139,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/address")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf())
                 .content(toJson(param))
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 //then
@@ -131,6 +155,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
     
     // @author: hyechan, @since: 2022/05/12 2:42 오후
     @Test
+    @WithUser
     void 주소록_추가_실패_beanValidation() throws Exception{
         //given
         AddressParam param = createParam();
@@ -138,6 +163,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
         //when
         mockMvc.perform(MockMvcRequestBuilders.post("/address")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf())
                 .content(toJson(param))
                 .accept(MediaType.APPLICATION_JSON_VALUE))
         //then
@@ -146,6 +172,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
     }
 
     @Test
+    @WithUser
     void 주소록_업데이트() throws Exception{
         //given
         AddressUpdateParam updateParam = new AddressUpdateParam();
@@ -159,6 +186,7 @@ public class AddressControllerUnitTest extends AddressConstructor {
         mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf())
                 .content(new ObjectMapper().writeValueAsString(updateParam)))
                 //then
                 .andExpect(status().isOk())
@@ -166,12 +194,14 @@ public class AddressControllerUnitTest extends AddressConstructor {
     }
 
     @Test
+    @WithUser
     void 주소록_삭제() throws Exception{
         //given
         willDoNothing().given(addressService).delete(id);
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
-                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
                 //then
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
