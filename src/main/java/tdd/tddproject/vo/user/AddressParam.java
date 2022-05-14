@@ -18,16 +18,12 @@ public class AddressParam {
 
     @NotNull
     private String addressZip;
-
     @NotNull
     private String addressCity;
-
     @NotNull
     private String addressStreet;
-
     @NotNull
     private String addressReceiver;
-
     @NotNull
     private String addressPhone;
 }

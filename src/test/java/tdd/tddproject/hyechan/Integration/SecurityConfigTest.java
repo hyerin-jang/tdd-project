@@ -40,7 +40,6 @@ public class SecurityConfigTest extends UserConstructor {
     @Autowired
     private UserService userService;
 
-    // FIXME : 카테고리 넣어주는 건... 항상 필요
     // 한번만 할 수 있는 방법은 없을까?
     @BeforeEach
     public void beforeEach(){
