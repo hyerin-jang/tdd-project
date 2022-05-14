@@ -33,7 +33,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userNo;
 
-    @Column(name = "USER_ID", nullable = false, length = 30)
+    @Column(name = "USER_ID", nullable = false, length = 30, unique = true)
     private String userId;
 
     @Column(name = "USER_PW")
@@ -62,8 +62,7 @@ public class User {
     //다:1 ROLE
     @ManyToOne(fetch = FetchType.LAZY)
 //    TODO : Roll 컬럼 추가 후 수정
-//    @JoinColumn(name="ROLE_NO", nullable = false)
-    @JoinColumn(name="ROLE_NO")
+    @JoinColumn(name="ROLE_NO", nullable = false)
     private Role role;
     //1:1 ADMIN
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

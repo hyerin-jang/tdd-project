@@ -45,4 +45,10 @@ public class AddressController {
         addressService.update(updateParam, id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/address/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        addressService.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }

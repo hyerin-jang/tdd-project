@@ -13,11 +13,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 import tdd.tddproject.domain.entity.user.Address;
+import tdd.tddproject.global.WithUser;
 import tdd.tddproject.hyechan.repository.AddressRepository;
 import tdd.tddproject.hyechan.util.AddressConstructor;
 import tdd.tddproject.vo.user.AddressParam;
@@ -27,14 +31,21 @@ import javax.persistence.EntityManager;
 
 import java.util.ArrayList;
 
-import static org.mockito.BDDMockito.given;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/*
+    @WithAnonymousUser - 익명유저의 인증정보를 설정하기 위한 어노테이션
+    @WithUserDetails - UserDetailsService를 통해서 유저정보를 취득하여 설정하기 위한 어노테이션
+    @WithMockUser - 별도의 UserDetailsService와 같은 스텁을 제공하지 않아도 간단하게 인증정보를 설정하기 위한 어노테이션
+ */
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -52,26 +63,26 @@ public class AddressTest extends AddressConstructor {
     @Autowired
     private AddressRepository addressRepository;
 
-    Long id;
-    Long failId;
+    Long id = 1L;
+    Long failId = 1000L;
 
     @BeforeEach
     public void init(){
-        id = 1L;
-        failId = 1000L;
         entityManager.createNativeQuery("ALTER SEQUENCE HIBERNATE_SEQUENCE RESTART WITH 1 ").executeUpdate();
     }
 
 
     // @author: hyechan, @since: 2022/04/29 9:01 오후
     @Test
+    @WithUser
     void 주소록_단건_조회_성공() throws Exception{
         //given
         Address address = createEntity(createParam());
         addressRepository.save(address);
         //when
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.get("/address/{id}", id)
-                .accept(MediaType.APPLICATION_JSON_VALUE));
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()));
         //then
         resultActions
                 .andExpect(status().isOk())
@@ -92,25 +103,29 @@ public class AddressTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/04 9:15 오후
     @Test
+    @WithUser
     void 주소록_단건_조회_실패() throws Exception{
         //given
         addressRepository.save(createEntity(createParam()));
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.get("/address/{id}", failId)
-                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
         //then
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
+    @WithUser
     void 주소록_리스트_조회() throws Exception{
         //given
         ArrayList<Address> list = createEntity(createParam(3));
         addressRepository.saveAll(list);
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.get("/address")
-                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
         //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result", Matchers.hasSize(3)))
@@ -123,6 +138,7 @@ public class AddressTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/05 10:41 오전
     @Test
+    @WithUser
     void 주소록_추가() throws Exception{
         //given
         AddressParam param = createParam();
@@ -130,6 +146,7 @@ public class AddressTest extends AddressConstructor {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/address")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(toJson(param))
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE))
         //then
                 .andExpect(status().isOk())
@@ -153,7 +170,8 @@ public class AddressTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/05 11:22 오전
     @Test
-    void 주소록_추가_받는사람null_실패_() throws Exception{
+    @WithUser
+    void 주소록_추가_받는사람_실패_beanValidation() throws Exception{
         //given
         AddressParam param = createParam();
         param.setAddressReceiver(null);
@@ -161,6 +179,7 @@ public class AddressTest extends AddressConstructor {
         ResultActions resultActions = mockMvc.perform(RestDocumentationRequestBuilders.post("/address")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(toJson(param))
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE));
         //then
         resultActions.andExpect(status().isBadRequest())
@@ -170,6 +189,7 @@ public class AddressTest extends AddressConstructor {
 
     // @author: hyechan, @since: 2022/05/05 11:34 오전
     @Test
+    @WithUser
     void 주소록_업데이트() throws Exception{
         //given
         addressRepository.save(createEntity(createParam()));
@@ -180,10 +200,50 @@ public class AddressTest extends AddressConstructor {
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.put("/address/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .content(new ObjectMapper().writeValueAsString(param)))
+                .content(new ObjectMapper().writeValueAsString(param))
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON_VALUE))
         //then
                 .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
+    // @author: hyechan, @since: 2022/05/12 2:55 오후
+    @Test
+    @WithUser
+    void 주소록_삭제() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
+        //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+
+    // @author: hyechan, @since: 2022/05/12 3:14 오후
+    // 이 테스트 코드를 짜면서 Service 에 () -> new IdNotFoundException(ErrorCode.ADDRESS_NOT_EXIST) 생김
+    @Test
+    @WithUser
+    void 주소록_삭제_중복요청_실패_IdNotFoundException() throws Exception{
+        //given
+        addressRepository.save(createEntity(createParam()));
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
+        //then
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/address/{id}",id)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()))
+                //then
+                .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 }

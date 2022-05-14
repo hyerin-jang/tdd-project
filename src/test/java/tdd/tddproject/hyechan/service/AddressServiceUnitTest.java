@@ -22,9 +22,9 @@ import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -127,5 +127,22 @@ class AddressServiceUnitTest extends AddressConstructor {
         addressService.update(updateParam, id);
         //then
         verify(addressRepository, times(1)).findById(id);
+    }
+
+
+    // @author: hyechan, @since: 2022/05/12 3:00 오후
+    @Test
+    void 주소록_삭제() throws Exception{
+        //given
+        Address entity = createEntity(createParam());
+        given(addressRepository.findById(id)).willReturn(Optional.ofNullable(entity));
+        willDoNothing().given(addressRepository).delete(any());
+
+        //when
+        addressService.delete(id);
+
+        //then
+        verify(addressRepository, times(1)).findById(anyLong());
+        verify(addressRepository, times(1)).delete(any());
     }
 }

@@ -10,11 +10,18 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import tdd.tddproject.config.SecurityConfig;
 import tdd.tddproject.domain.entity.user.User;
+import tdd.tddproject.global.WithAdmin;
+import tdd.tddproject.global.WithUser;
 import tdd.tddproject.hyechan.controller.UserController;
 import tdd.tddproject.hyechan.dto.UserDto;
 import tdd.tddproject.hyechan.mapper.UserMapper;
@@ -26,14 +33,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class) // include MockMvc
+@WebMvcTest(
+        controllers = UserController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.ASSIGNABLE_TYPE,
+                        classes = SecurityConfig.class
+                )
+        }
+) // include MockMvc
 //단위테스트 WebMvcTest 테스트 하는 것만 메모리에 뜬다 = 통합 보다 가볍다
 //@ExtendWith(SpringExtension.class) // Spring 환경 테스트로 확장, JUNIT4: RunWith(SpringRunner.class)
-@Slf4j
 public class UserControllerUnitTest extends UserConstructor {
 
     @Autowired
@@ -49,6 +64,7 @@ public class UserControllerUnitTest extends UserConstructor {
     //@WebMvcTest, Spring 환경 테스트 확장 되어 중복 => MockBean
 
     @Test
+    @WithUser // FIXME : 확인필요
     public void user_add_test() throws Exception{
         // BOD Mockito pattern (extends BODMockito 라이브러리 사용가능)
         // == given(값)
@@ -61,6 +77,7 @@ public class UserControllerUnitTest extends UserConstructor {
         ResultActions resultActions = mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(content)
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE));
 
         // == then(검증)
@@ -72,6 +89,7 @@ public class UserControllerUnitTest extends UserConstructor {
     }
 
     @Test
+    @WithAdmin
     public void user_getList_test() throws Exception{
         // mapStruct, modelMapper 를 쓸 경우 list 값은 어떻게 담는가? -> entityBuilder사용
         //given
@@ -81,7 +99,8 @@ public class UserControllerUnitTest extends UserConstructor {
         when(userService.findAll()).thenReturn(userDtoList);
         //when
         ResultActions resultActions = mockMvc.perform(get(("/user"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()));
         //then
         resultActions
                 .andExpect(status().isOk())
@@ -94,6 +113,7 @@ public class UserControllerUnitTest extends UserConstructor {
     }
 
     @Test
+    @WithUser
     public void user_get_test() throws Exception{
         // given
 
@@ -104,7 +124,8 @@ public class UserControllerUnitTest extends UserConstructor {
         // when
 
         ResultActions resultActions = mockMvc.perform(get("/user/{userNo}", userNo)
-                .accept(MediaType.APPLICATION_JSON_VALUE));
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf()));
 
         // then
         resultActions
@@ -114,6 +135,7 @@ public class UserControllerUnitTest extends UserConstructor {
     }
 
     @Test
+    @WithUser
     public void user_update_test() throws Exception{
         //given
         // 전 데이터
@@ -138,6 +160,7 @@ public class UserControllerUnitTest extends UserConstructor {
         ResultActions resultActions = mockMvc.perform(put("/user/{userNo}", userNo)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(content)
+                .with(csrf())
                 .accept(MediaType.APPLICATION_JSON_VALUE));
 
         //then
@@ -169,6 +192,7 @@ public class UserControllerUnitTest extends UserConstructor {
         mocking 에서 mocked 오브젝트의 모든 메서드는 doNothing 이 디폴트 값이다,
      */
     @Test
+    @WithUser
     public void user_delete_test_doNothing() throws Exception{
         //given
         Long userNo = 1L;
@@ -176,6 +200,7 @@ public class UserControllerUnitTest extends UserConstructor {
         //when
         ResultActions resultActions = mockMvc.perform(delete("/user/{userNo}", userNo)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         //then
